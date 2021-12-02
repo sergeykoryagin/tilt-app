@@ -1,11 +1,11 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import {useInterFont} from 'hooks/useInterFont';
-import {SignIn} from 'screens/SignIn';
+import { Routes } from 'components/Routes';
 
 export default function App() {
     const [isLoaded] = useInterFont();
-    
+
     if (!isLoaded) {
         return <View style={{backgroundColor: 'red'}}>
 
@@ -14,7 +14,7 @@ export default function App() {
 
     return (
         <View style={styles.container}>
-            <SignIn />
+            <Routes />
         </View>
     );
 }
@@ -25,7 +25,6 @@ const styles = StyleSheet.create({
         height: '100%',
         width: '100%',
         backgroundColor: '#fff',
-        alignItems: 'center',
         justifyContent: 'center',
     },
 });
