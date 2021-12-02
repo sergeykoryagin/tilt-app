@@ -8,36 +8,44 @@ import { Button } from 'components/Button';
 import { Input } from 'components/Input';
 import { Fonts } from 'constants/fonts';
 
-type Props = NativeStackScreenProps<AuthStackParamList, ScreenName.SIGN_IN>;
+type Props = NativeStackScreenProps<AuthStackParamList, ScreenName.SIGN_UP>;
 
-export const SignIn: FC<Props> = (): JSX.Element => {
-    const [login, setLogin] = useState<string>('1231231');
+export const SignUp: FC<Props> = (): JSX.Element => {
+    const [login, setLogin] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [passwordRepeat, setPasswordRepeat] = useState<string>('');
 
     return (
-        <KeyboardAvoidingView style={styles.screen} behavior='height'>
-            <Text style={styles.title}>Вход</Text>
+        <KeyboardAvoidingView style={styles.screen} behavior='padding'>
+            <Text style={styles.title}>Регистрация</Text>
             <Input
                 value={login}
                 onChangeText={setLogin}
                 placeholder='Имя пользователя'
-                style={styles.login}
+                style={styles.input}
             />
             <Input
                 value={password}
                 onChangeText={setPassword}
                 placeholder='Пароль'
+                style={styles.input}
+                secureTextEntry
+            />
+            <Input
+                value={passwordRepeat}
+                onChangeText={setPasswordRepeat}
+                placeholder='Повторите пароль'
                 secureTextEntry
             />
             <Button style={styles.button}>
-                 Войти
+                Зарегистрироваться
             </Button>
             <View style={styles.linkWrapper}>
-                <Text style={styles.noAccount}>
-                    нет аккаунта?
+                <Text style={styles.hasAccount}>
+                    есть аккаунт?
                 </Text>
-                <Link<AuthStackParamList> to={{ screen: ScreenName.SIGN_UP }} style={styles.link}>
-                    зарегистрироваться
+                <Link<AuthStackParamList> to={{ screen: ScreenName.SIGN_IN }} style={styles.link}>
+                    авторизоваться
                 </Link>
             </View>
         </KeyboardAvoidingView>
@@ -49,13 +57,13 @@ const styles = StyleSheet.create({
         height: '100%',
         width: '100%',
         alignItems: 'center',
-        marginTop: 44,
+        marginTop: 44
     },
     title: {
         ...Fonts.header,
         marginBottom: 24,
     },
-    login: {
+    input: {
         marginBottom: 20,
     },
     button: {
@@ -64,7 +72,7 @@ const styles = StyleSheet.create({
     linkWrapper: {
         alignItems: 'center',
     },
-    noAccount: {
+    hasAccount: {
         ...Fonts.paragraphDefault,
         marginBottom: 4,
     },
