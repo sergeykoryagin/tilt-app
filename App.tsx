@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { Color } from 'constants/color';
 import {useInterFont} from 'hooks/useInterFont';
 import { Routes } from 'components/Routes';
 
@@ -24,7 +25,7 @@ const styles = StyleSheet.create({
         flex: 1,
         height: '100%',
         width: '100%',
-        backgroundColor: '#fff',
+        backgroundColor: Color.WHITE,
         justifyContent: 'center',
     },
 });

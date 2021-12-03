@@ -1,16 +1,38 @@
+import React, { FC, useState, } from 'react';
+import { View, StyleSheet } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { Input } from 'components/Input';
+import { Line } from 'components/Line';
+import { SegmentedControl } from 'components/SegmentedControl';
 import { Color } from 'constants/color';
 import { MainStackParamList, ScreenName } from 'navigation/navigation';
-import React, { FC, } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Fonts } from 'constants/fonts';
+import { Header } from 'screens/Home/components/Header';
+import { HomePageSegment, homePageSegments } from 'screens/Home/utils/home-page-segments';
+import SearchIcon from 'svg-icons/search.svg';
 
 type Props = NativeStackScreenProps<MainStackParamList, ScreenName.HOME>;
 
 export const Home: FC<Props> = (): JSX.Element => {
+    const [segment, setSegment] = useState<HomePageSegment>(HomePageSegment.CHATS);
+    const handleSegmentChange = (segment: HomePageSegment): void => {
+        setSegment(segment);
+    };
+
     return (
         <View style={styles.screen}>
-
+            <Header />
+            <Line />
+            <Input
+                placeholder='Введите имя пользователя...'
+                style={styles.input}
+                suffix={<SearchIcon width={24} height={24} fill={Color.BLACK_200} />}
+            />
+            <SegmentedControl
+                segments={homePageSegments}
+                valueIndex={segment}
+                onChange={handleSegmentChange}
+                style={styles.segments}
+            />
         </View>
     );
 };
@@ -18,29 +40,15 @@ export const Home: FC<Props> = (): JSX.Element => {
 const styles = StyleSheet.create({
     screen: {
         height: '100%',
-        width: '100%',
         alignItems: 'center',
-        marginTop: 44,
+        paddingTop: 44,
+        backgroundColor: Color.WHITE,
     },
-    title: {
-        ...Fonts.header,
-        marginBottom: 24,
+    input: {
+        marginTop: 16,
+        width: 327,
     },
-    login: {
-        marginBottom: 20,
-    },
-    button: {
-        marginVertical: 48,
-    },
-    linkWrapper: {
-        alignItems: 'center',
-    },
-    noAccount: {
-        ...Fonts.paragraphDefault,
-        marginBottom: 4,
-    },
-    link: {
-        ...Fonts.paragraphBold,
-        color: Color.GREEN_400,
+    segments: {
+        marginTop: 16,
     },
 });

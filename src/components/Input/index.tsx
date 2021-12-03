@@ -1,7 +1,8 @@
+import React, { FC, ReactNode, useCallback, useState } from 'react';
+import { Fonts } from 'constants/fonts';
+import { StyleSheet, TextInput, View, ViewStyle } from 'react-native';
 import { useShadowOffset } from 'hooks/useShadowOffset';
-import React, { FC, useCallback, useState } from 'react';
 import { Shadow } from 'react-native-shadow-2';
-import { StyleSheet, TextInput, ViewStyle } from 'react-native';
 import { Color } from 'constants/color';
 import { getStyleByCondition } from 'utils/get-style-by-condition';
 
@@ -12,6 +13,7 @@ interface Props {
     placeholder?: string;
     secureTextEntry?: boolean;
     editable?: boolean;
+    suffix?: ReactNode;
 }
 
 enum SHADOW_OFFSET {
@@ -25,6 +27,7 @@ export const Input: FC<Props> = ({
     onChangeText,
     style,
     placeholder,
+    suffix,
     secureTextEntry = false,
     editable = true,
 }: Props): JSX.Element => {
@@ -42,36 +45,60 @@ export const Input: FC<Props> = ({
             startColor={`${Color.BLACK_500}80`}
             containerViewStyle={style}
         >
-            <TextInput
-                value={value}
-                style={{
-                    ...styles.input,
-                    ...getStyleByCondition(!editable, styles.inputDisabled),
-                }}
-                placeholder={!focused ? placeholder : undefined}
-                onChangeText={onChangeText}
-                onFocus={toggleFocus}
-                onBlur={toggleFocus}
-                placeholderTextColor={Color.BLACK_200}
-                selectionColor={Color.BLACK_400}
-                secureTextEntry={secureTextEntry}
-                editable={editable}
-            />
+            <View style={{
+                ...styles.inputWrapper,
+                ...getStyleByCondition(!editable, styles.inputDisabled),
+                ...getStyleByCondition(!!suffix, styles.inputWrapperWithSuffix)
+            }}>
+                <TextInput
+                    value={value}
+                    style={{
+                        ...styles.input,
+                        ...getStyleByCondition(!editable, styles.inputDisabled),
+                        ...getStyleByCondition(!!suffix, styles.inputWithSuffix)
+                    }}
+                    placeholder={!focused ? placeholder : undefined}
+                    onChangeText={onChangeText}
+                    onFocus={toggleFocus}
+                    onBlur={toggleFocus}
+                    placeholderTextColor={Color.BLACK_200}
+                    selectionColor={Color.BLACK_400}
+                    secureTextEntry={secureTextEntry}
+                    editable={editable}
+                />
+                {suffix}
+            </View>
         </Shadow>
     );
 };
 
 const styles = StyleSheet.create({
+    inputWrapper: {
+        height: 48,
+        width: '100%',
+        maxWidth: 327,
+        borderRadius: 8,
+        overflow: 'hidden',
+        flexDirection: 'row',
+        backgroundColor: Color.WHITE,
+        alignItems: 'center',
+    },
+    inputWrapperWithSuffix: {
+        paddingRight: 12,
+    },
     input: {
+        ...Fonts.input,
         backgroundColor: Color.WHITE,
         color: Color.BLACK_500,
-        width: 320,
-        height: 48,
-        borderRadius: 8,
-        paddingHorizontal: 12
+        width: '100%',
+        height: '100%',
+        paddingHorizontal: 12,
     },
     inputDisabled: {
         backgroundColor: Color.BLACK_100,
         color: Color.BLACK_300,
+    },
+    inputWithSuffix: {
+        width: '90%'
     },
 });

@@ -1,9 +1,9 @@
+import React, { FC, useState } from 'react';
 import { Link } from '@react-navigation/native';
+import { View, Text, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Color } from 'constants/color';
 import { AuthStackParamList, ScreenName } from 'navigation/navigation';
-import React, { FC, useState } from 'react';
-import { View, Text, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import { Button } from 'components/Button';
 import { Input } from 'components/Input';
 import { Fonts } from 'constants/fonts';
@@ -15,7 +15,9 @@ export const SignIn: FC<Props> = (): JSX.Element => {
     const [password, setPassword] = useState<string>('');
 
     return (
-        <KeyboardAvoidingView style={styles.screen} behavior='height'>
+        <KeyboardAvoidingView style={{
+            ...styles.screen,
+        }} behavior='height'>
             <Text style={styles.title}>Вход</Text>
             <Input
                 value={login}
@@ -47,9 +49,10 @@ export const SignIn: FC<Props> = (): JSX.Element => {
 const styles = StyleSheet.create({
     screen: {
         height: '100%',
+        paddingTop: 44,
         width: '100%',
+        backgroundColor: Color.WHITE,
         alignItems: 'center',
-        marginTop: 44,
     },
     title: {
         ...Fonts.header,
