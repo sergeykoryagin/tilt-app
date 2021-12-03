@@ -5,7 +5,7 @@ import { Color } from 'constants/color';
 import { getStyleByCondition } from 'utils/get-style-by-condition';
 
 interface Props {
-    segments: readonly [string, string];
+    segments: [string, string];
     valueIndex?: number;
     onChange?: (valueIndex: number) => void;
     style?: ViewStyle;
@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: 163,
+        height: 36,
         elevation: 5
     },
     segmentText: {

@@ -1,8 +1,8 @@
-import { Fonts } from 'constants/fonts';
-import { useShadowOffset } from 'hooks/useShadowOffset';
 import React, { FC, useCallback, useState } from 'react';
 import { Shadow } from 'react-native-shadow-2';
 import { StyleSheet, ViewStyle, TouchableWithoutFeedback, Text, View } from 'react-native';
+import { Fonts } from 'constants/fonts';
+import { useShadowOffset } from 'hooks/useShadowOffset';
 import { Color } from 'constants/color';
 import { getStyleByCondition } from 'utils/get-style-by-condition';
 

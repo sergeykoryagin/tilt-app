@@ -1,15 +1,11 @@
 import React, { FC } from 'react';
+import { Link } from '@react-navigation/native';
+import { profileInfo } from 'interfaces/model/profile-info';
+import { MainStackParamList, ScreenName } from 'navigation/navigation';
 import { View, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
 import { Color } from 'constants/color';
 import { Fonts } from 'constants/fonts';
 import SettingsIcon from 'svg-icons/settings.svg';
-
-const profileInfo = {
-    userId: 1,
-    login: 'sergey_koryagin',
-    aboutMe: 'kek',
-    avatar: null,
-};
 
 export const Header: FC = (): JSX.Element => {
     return (
@@ -24,15 +20,17 @@ export const Header: FC = (): JSX.Element => {
                 />
             </TouchableOpacity>
 
-            <View style={styles.userInfo}>
-                <View style={styles.info}>
-                    <Text style={styles.login}>{profileInfo.login}</Text>
-                    <Text style={styles.aboutMe}>{profileInfo.aboutMe}</Text>
+            <Link<MainStackParamList> to={{ screen: ScreenName.PROFILE, params: { userId: 1 } }}>
+                <View style={styles.userInfo}>
+                    <View style={styles.info}>
+                        <Text style={styles.login}>{profileInfo.login}</Text>
+                        <Text style={styles.aboutMe}>{profileInfo.aboutMe}</Text>
+                    </View>
+                    <Image
+                        source={require('assets/images/avatar-doge.png')}
+                    />
                 </View>
-                <Image
-                    source={require('assets/images/avatar-doge.png')}
-                />
-            </View>
+            </Link>
         </View>
     );
 };

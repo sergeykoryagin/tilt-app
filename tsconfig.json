@@ -12,6 +12,7 @@
       "utils": ["./src/utils"],
       "navigation": ["./src/navigation"],
       "svg-icons": ["./src/svg-icons"],
+      "interfaces": ["./src/interfaces"],
     }
   },
 }

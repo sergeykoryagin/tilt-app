@@ -10,7 +10,7 @@ export const homePageSegmentMap = {
 
 export const formatHomePageSegment = (segment: HomePageSegment) => homePageSegmentMap[segment];
 
-export const homePageSegments = [
+export const homePageSegments: [string, string] = [
     formatHomePageSegment(HomePageSegment.CHATS),
     formatHomePageSegment(HomePageSegment.USERS),
-] as const;
+];
