@@ -95,8 +95,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
     },
     inputDisabled: {
-        backgroundColor: Color.BLACK_100,
-        color: Color.BLACK_300,
+        backgroundColor: Color.BLACK_300,
+        color: Color.BLACK_200,
     },
     inputWithSuffix: {
         width: '90%'
