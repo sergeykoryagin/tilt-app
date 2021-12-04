@@ -78,7 +78,6 @@ export const Input: FC<Props> = ({
                     editable={editable}
                     multiline={multiline}
                     textAlignVertical={multiline ? 'top' : 'center'}
-                    autoCorrect={false}
                     blurOnSubmit={blurOnSubmit}
                     keyboardType={keyboardType}
                 />

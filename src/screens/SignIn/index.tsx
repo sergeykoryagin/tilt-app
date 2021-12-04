@@ -1,7 +1,9 @@
+import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';
 import { Link } from '@react-navigation/native';
 import { View, Text, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useStores } from 'hooks/useStores';
 import { Color } from 'constants/color';
 import { AuthStackParamList, ScreenName } from 'navigation/navigation';
 import { Button } from 'components/Button';
@@ -10,9 +12,15 @@ import { Fonts } from 'constants/fonts';
 
 type Props = NativeStackScreenProps<AuthStackParamList, ScreenName.SIGN_IN>;
 
-export const SignIn: FC<Props> = (): JSX.Element => {
-    const [login, setLogin] = useState<string>('1231231');
+export const SignIn: FC<Props> = observer((): JSX.Element => {
+    const { authStore: { isLoading, signIn } } = useStores();
+
+    const [login, setLogin] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+
+    const handleSignInPress = () => {
+        signIn(login, password);
+    };
 
     return (
         <KeyboardAvoidingView style={{
@@ -23,15 +31,21 @@ export const SignIn: FC<Props> = (): JSX.Element => {
                 value={login}
                 onChangeText={setLogin}
                 placeholder='Имя пользователя'
+                editable={!isLoading}
                 style={styles.login}
             />
             <Input
                 value={password}
                 onChangeText={setPassword}
                 placeholder='Пароль'
+                editable={!isLoading}
                 secureTextEntry
             />
-            <Button style={styles.button}>
+            <Button
+                style={styles.button}
+                onPress={handleSignInPress}
+                disabled={isLoading}
+            >
                  Войти
             </Button>
             <View style={styles.linkWrapper}>
@@ -44,7 +58,7 @@ export const SignIn: FC<Props> = (): JSX.Element => {
             </View>
         </KeyboardAvoidingView>
     );
-};
+});
 
 const styles = StyleSheet.create({
     screen: {

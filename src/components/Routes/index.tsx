@@ -1,14 +1,16 @@
-import React, { FC, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import React, { FC } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { ScreenName, AuthStack, MainStack } from 'navigation/navigation';
+import { useAuth } from 'hooks/useAuth';
 import { Chat } from 'screens/Chat';
 import { Home } from 'screens/Home';
 import { Profile } from 'screens/Profile';
 import { SignIn } from 'screens/SignIn';
 import { SignUp } from 'screens/SignUp';
 
-export const Routes: FC = (): JSX.Element => {
-    const [isAuth, setIsAuth] = useState<boolean>(true);
+export const Routes: FC = observer((): JSX.Element => {
+    const { isAuth } = useAuth();
 
     return (
         <NavigationContainer>
@@ -41,4 +43,4 @@ export const Routes: FC = (): JSX.Element => {
             )}
         </NavigationContainer>
     );
-};
+});

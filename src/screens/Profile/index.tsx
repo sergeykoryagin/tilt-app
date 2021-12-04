@@ -1,21 +1,24 @@
+import { observer } from 'mobx-react-lite';
 import React, { FC } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button } from 'components/Button';
 import { Color } from 'constants/color';
 import { Fonts } from 'constants/fonts';
-import { profileInfo1 } from 'interfaces/model/profile-info';
 import { MainStackParamList, ScreenName } from 'navigation/navigation';
+import { useProfileInfo } from 'screens/Profile/hooks/useProfileInfo';
 import ArrowLeftIcon from 'svg-icons/arrow-left.svg';
 
-type Props = NativeStackScreenProps<MainStackParamList, ScreenName.HOME>;
+type Props = NativeStackScreenProps<MainStackParamList, ScreenName.PROFILE>;
 
-export const Profile: FC<Props> = ({ navigation }: Props): JSX.Element => {
+export const Profile: FC<Props> = observer(({ navigation, route }: Props): JSX.Element => {
     const { width } = useWindowDimensions();
 
     const handleBackButtonPress = () => {
         navigation.goBack();
     };
+
+    const { profile, isMyProfile, isLoading } = useProfileInfo(route.params.userId);
 
     return (
         <View style={styles.screen}>
@@ -26,9 +29,11 @@ export const Profile: FC<Props> = ({ navigation }: Props): JSX.Element => {
                 >
                     <ArrowLeftIcon fill={Color.WHITE} width={48} height={48} style={styles.backButton} />
                 </TouchableOpacity>
-                {/*<Text style={styles.onlineStatus}>*/}
-                {/*    был в сети в 21:21*/}
-                {/*</Text>*/}
+                {!isMyProfile && (
+                    <Text style={styles.onlineStatus}>
+                        был в сети в 21:21
+                    </Text>
+                )}
             </View>
             <Image
                 source={require('assets/images/gradient.png')}
@@ -39,7 +44,7 @@ export const Profile: FC<Props> = ({ navigation }: Props): JSX.Element => {
                 }}
             />
             <Image
-                source={require('assets/images/avatar-doge-large.png')}
+                source={{ uri: profile?.avatar }}
                 style={{
                     ...styles.avatar,
                     height: width,
@@ -48,11 +53,11 @@ export const Profile: FC<Props> = ({ navigation }: Props): JSX.Element => {
             />
             <View style={styles.info}>
                 <Text style={styles.field}>Имя пользователя</Text>
-                <Text style={styles.login}>{profileInfo1.login}</Text>
+                <Text style={styles.login}>{profile?.login}</Text>
                 <Text style={styles.field}>Обо мне:</Text>
-                <Text style={styles.aboutMe}>{profileInfo1.aboutMe}</Text>
+                <Text style={styles.aboutMe}>{profile?.aboutMe}</Text>
             </View>
-            {profileInfo1.login === 'sergey_koryagin' ? (
+            {profile?.login === '64c0a249-2932-4daf-b90a-46a029240b44' ? (
                 <Button>
                     Редактировать профиль
                 </Button>
@@ -63,7 +68,7 @@ export const Profile: FC<Props> = ({ navigation }: Props): JSX.Element => {
             )}
         </View>
     );
-};
+});
 
 const styles = StyleSheet.create({
     screen: {

@@ -1,9 +1,8 @@
 import React, { FC } from 'react';
 import { View, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
 import { Link } from '@react-navigation/native';
-import { profileInfo2 } from 'interfaces/model/profile-info';
-import { chatItem1 } from 'interfaces/model/chat-item';
 import { MainStackParamList, ScreenName } from 'navigation/navigation';
+import { chatItems } from 'interfaces/model/chat-item';
 import { Color } from 'constants/color';
 import { Fonts } from 'constants/fonts';
 import ArrowLeftIcon from 'svg-icons/arrow-left.svg';
@@ -27,11 +26,11 @@ export const ChatHeader: FC<Props> = ({ onBackButtonPress }: Props): JSX.Element
                 />
             </TouchableOpacity>
 
-            <Link<MainStackParamList> to={{ screen: ScreenName.PROFILE, params: { userId: chatItem1.userId } }}>
+            <Link<MainStackParamList> to={{ screen: ScreenName.PROFILE, params: { userId: chatItems[0].userId } }}>
                 <View style={styles.userInfo}>
                     <View style={styles.info}>
-                        <Text style={styles.login}>{chatItem1.userLogin}</Text>
-                        <Text style={styles.aboutMe}>{profileInfo2.aboutMe}</Text>
+                        <Text style={styles.login}>{chatItems[0].userLogin}</Text>
+                        <Text style={styles.aboutMe}>rtrtrtr</Text>
                     </View>
                     <Image
                         source={require('assets/images/avatar-doge.png')}

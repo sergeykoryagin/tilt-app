@@ -15,6 +15,9 @@ module.exports = function(api) {
                         utils: './src/utils',
                         navigation: './src/navigation',
                         interfaces: './src/interfaces',
+                        stores: './src/stores',
+                        services: './src/services',
+                        context: './src/context'
                     },
                 }
             ]
