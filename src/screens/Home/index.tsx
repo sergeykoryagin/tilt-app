@@ -3,10 +3,12 @@ import { View, StyleSheet } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Input } from 'components/Input';
 import { Line } from 'components/Line';
+import { chatItem1, chatItem2 } from 'interfaces/model/chat-item';
 import { SegmentedControl } from 'components/SegmentedControl';
 import { Color } from 'constants/color';
 import { MainStackParamList, ScreenName } from 'navigation/navigation';
-import { Header } from 'screens/Home/components/Header';
+import { ChatPreview } from 'screens/Home/components/ChatPreview';
+import { HomeHeader } from 'screens/Home/components/HomeHeader';
 import { HomePageSegment, homePageSegments } from 'screens/Home/utils/home-page-segments';
 import SearchIcon from 'svg-icons/search.svg';
 
@@ -20,7 +22,7 @@ export const Home: FC<Props> = (): JSX.Element => {
 
     return (
         <View style={styles.screen}>
-            <Header />
+            <HomeHeader />
             <Line />
             <Input
                 placeholder='Введите имя пользователя...'
@@ -32,6 +34,13 @@ export const Home: FC<Props> = (): JSX.Element => {
                 valueIndex={segment}
                 onChange={handleSegmentChange}
                 style={styles.segments}
+            />
+            <ChatPreview
+                style={styles.chatItem}
+                chat={chatItem1}
+            />
+            <ChatPreview
+                chat={chatItem2}
             />
         </View>
     );
@@ -49,6 +58,9 @@ const styles = StyleSheet.create({
         width: 327,
     },
     segments: {
-        marginTop: 16,
+        marginVertical: 16,
+    },
+    chatItem: {
+        marginBottom: 8,
     },
 });

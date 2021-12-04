@@ -1,11 +1,11 @@
+import React, { FC } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button } from 'components/Button';
 import { Color } from 'constants/color';
 import { Fonts } from 'constants/fonts';
-import { profileInfo } from 'interfaces/model/profile-info';
+import { profileInfo1 } from 'interfaces/model/profile-info';
 import { MainStackParamList, ScreenName } from 'navigation/navigation';
-import React, { FC } from 'react';
 import ArrowLeftIcon from 'svg-icons/arrow-left.svg';
 
 type Props = NativeStackScreenProps<MainStackParamList, ScreenName.HOME>;
@@ -48,11 +48,11 @@ export const Profile: FC<Props> = ({ navigation }: Props): JSX.Element => {
             />
             <View style={styles.info}>
                 <Text style={styles.field}>Имя пользователя</Text>
-                <Text style={styles.login}>{profileInfo.login}</Text>
+                <Text style={styles.login}>{profileInfo1.login}</Text>
                 <Text style={styles.field}>Обо мне:</Text>
-                <Text style={styles.aboutMe}>{profileInfo.aboutMe}</Text>
+                <Text style={styles.aboutMe}>{profileInfo1.aboutMe}</Text>
             </View>
-            {profileInfo.login === 'sergey_koryagin' ? (
+            {profileInfo1.login === 'sergey_koryagin' ? (
                 <Button>
                     Редактировать профиль
                 </Button>

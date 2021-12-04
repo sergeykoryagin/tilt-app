@@ -1,8 +1,8 @@
 import React, { FC, ReactNode, useCallback, useState } from 'react';
-import { Fonts } from 'constants/fonts';
-import { StyleSheet, TextInput, View, ViewStyle } from 'react-native';
-import { useShadowOffset } from 'hooks/useShadowOffset';
 import { Shadow } from 'react-native-shadow-2';
+import { Animated, KeyboardType, OpaqueColorValue, StyleSheet, TextInput, ViewStyle } from 'react-native';
+import { Fonts } from 'constants/fonts';
+import { useShadowOffset } from 'hooks/useShadowOffset';
 import { Color } from 'constants/color';
 import { getStyleByCondition } from 'utils/get-style-by-condition';
 
@@ -14,6 +14,10 @@ interface Props {
     secureTextEntry?: boolean;
     editable?: boolean;
     suffix?: ReactNode;
+    multiline?: boolean;
+    keyboardType?: KeyboardType;
+    blurOnSubmit?: boolean;
+    backgroundColor?: string | Animated.Value | Animated.AnimatedInterpolation | OpaqueColorValue;
 }
 
 enum SHADOW_OFFSET {
@@ -28,8 +32,12 @@ export const Input: FC<Props> = ({
     style,
     placeholder,
     suffix,
+    keyboardType,
+    blurOnSubmit,
     secureTextEntry = false,
     editable = true,
+    multiline = false,
+    backgroundColor = Color.BLACK_100,
 }: Props): JSX.Element => {
     const [focused, setFocused] = useState<boolean>(false);
     const toggleFocus = useCallback(() => setFocused((prev: boolean): boolean => !prev), []);
@@ -45,11 +53,14 @@ export const Input: FC<Props> = ({
             startColor={`${Color.BLACK_500}80`}
             containerViewStyle={style}
         >
-            <View style={{
-                ...styles.inputWrapper,
-                ...getStyleByCondition(!editable, styles.inputDisabled),
-                ...getStyleByCondition(!!suffix, styles.inputWrapperWithSuffix)
-            }}>
+            <Animated.View
+                style={[
+                    styles.inputWrapper,
+                    { backgroundColor },
+                    getStyleByCondition(!editable, styles.inputDisabled),
+                    getStyleByCondition(multiline, styles.inputWrapperMultiline),
+                ]}
+            >
                 <TextInput
                     value={value}
                     style={{
@@ -65,9 +76,14 @@ export const Input: FC<Props> = ({
                     selectionColor={Color.BLACK_400}
                     secureTextEntry={secureTextEntry}
                     editable={editable}
+                    multiline={multiline}
+                    textAlignVertical={multiline ? 'top' : 'center'}
+                    autoCorrect={false}
+                    blurOnSubmit={blurOnSubmit}
+                    keyboardType={keyboardType}
                 />
                 {suffix}
-            </View>
+            </Animated.View>
         </Shadow>
     );
 };
@@ -80,19 +96,19 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         overflow: 'hidden',
         flexDirection: 'row',
-        backgroundColor: Color.WHITE,
         alignItems: 'center',
+        paddingHorizontal: 12,
     },
-    inputWrapperWithSuffix: {
-        paddingRight: 12,
+    inputWrapperMultiline: {
+        height: 80,
+        paddingVertical: 16,
+        paddingHorizontal: 16,
     },
     input: {
         ...Fonts.input,
-        backgroundColor: Color.WHITE,
         color: Color.BLACK_500,
         width: '100%',
         height: '100%',
-        paddingHorizontal: 12,
     },
     inputDisabled: {
         backgroundColor: Color.BLACK_300,

@@ -1,8 +1,12 @@
 import React, { FC } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ViewStyle } from 'react-native';
 import { Color } from 'constants/color';
 
-export const Line: FC = (): JSX.Element => <View style={styles.line}/>;
+interface Props {
+    style?: ViewStyle;
+}
+
+export const Line: FC<Props> = ({ style }: Props): JSX.Element => <View style={[styles.line, style]}/>;
 
 const styles = StyleSheet.create({
     line: {

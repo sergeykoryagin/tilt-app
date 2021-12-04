@@ -1,13 +1,13 @@
 import React, { FC } from 'react';
-import { Link } from '@react-navigation/native';
-import { profileInfo } from 'interfaces/model/profile-info';
-import { MainStackParamList, ScreenName } from 'navigation/navigation';
 import { View, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
+import { Link } from '@react-navigation/native';
+import { profileInfo1 } from 'interfaces/model/profile-info';
+import { MainStackParamList, ScreenName } from 'navigation/navigation';
 import { Color } from 'constants/color';
 import { Fonts } from 'constants/fonts';
 import SettingsIcon from 'svg-icons/settings.svg';
 
-export const Header: FC = (): JSX.Element => {
+export const HomeHeader: FC = (): JSX.Element => {
     return (
         <View style={styles.header}>
             <TouchableOpacity
@@ -20,11 +20,11 @@ export const Header: FC = (): JSX.Element => {
                 />
             </TouchableOpacity>
 
-            <Link<MainStackParamList> to={{ screen: ScreenName.PROFILE, params: { userId: 1 } }}>
+            <Link<MainStackParamList> to={{ screen: ScreenName.PROFILE, params: { userId: profileInfo1.userId } }}>
                 <View style={styles.userInfo}>
                     <View style={styles.info}>
-                        <Text style={styles.login}>{profileInfo.login}</Text>
-                        <Text style={styles.aboutMe}>{profileInfo.aboutMe}</Text>
+                        <Text style={styles.login}>{profileInfo1.login}</Text>
+                        <Text style={styles.aboutMe}>{profileInfo1.aboutMe}</Text>
                     </View>
                     <Image
                         source={require('assets/images/avatar-doge.png')}
