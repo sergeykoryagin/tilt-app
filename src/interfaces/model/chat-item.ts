@@ -1,5 +1,11 @@
-import { MessageItem, message1, message2 } from 'interfaces/model/message-item';
-import { profileInfo2, profileInfo3 } from 'interfaces/model/profile-info';
+import { MessageItem } from 'interfaces/model/message-item';
+import { ProfileInfo } from 'interfaces/model/profile-info';
+import profiles from 'utils/mocks/profiles.json';
+import messages from 'utils/mocks/messages.json';
+
+// @ts-ignore
+const profile: ProfileInfo = profiles[0];
+const message: MessageItem = messages[0];
 
 export interface ChatItem {
     chatId: string;
@@ -9,16 +15,60 @@ export interface ChatItem {
     userPhoto?: ArrayBuffer | string;
 }
 
-export const chatItem1: ChatItem = {
-    chatId: 'awdiahwdi',
-    userId: profileInfo2.userId,
-    userLogin: profileInfo2.login,
-    lastMessage: message1,
-};
+export const chatItems: ChatItem[] = [
+    {
+        chatId: 'awdiahwdi',
+        userId: profile.userId,
+        userLogin: profile.login,
+        lastMessage: message,
+    },
+    {
+        chatId: 'awdnaw',
+        userLogin: profile.login,
+        userId: profile.userId,
+        lastMessage: message,
+    },
+    {
+        chatId: 'wfvaw',
+        userId: profile.userId,
+        userLogin: profile.login,
+        lastMessage: message,
+    },
+    {
+        chatId: 'awd12ewrfdnaw',
+        userLogin: profile.login,
+        userId: profile.userId,
+        lastMessage: message,
+    },
+    {
+        chatId: 'awd3refsiahwdi',
+        userId: profile.userId,
+        userLogin: profile.login,
+        lastMessage: message,
+    },
+    {
+        chatId: 'aw3rqwaefsgrhdnaw',
+        userLogin: profile.login,
+        userId: profile.userId,
+        lastMessage: message,
+    },
+    {
+        chatId: 'awd12ewafwfarfdnaw',
+        userLogin: profile.login,
+        userId: profile.userId,
+        lastMessage: message,
+    },
+    {
+        chatId: 'awd3refsidnybdahwdi',
+        userId: profile.userId,
+        userLogin: profile.login,
+        lastMessage: message,
+    },
+    {
+        chatId: 'aw3rqwae456yuhgffsgrhdnaw',
+        userLogin: profile.login,
+        userId: profile.userId,
+        lastMessage: message,
+    },
 
-export const chatItem2: ChatItem = {
-    chatId: 'awdnaw',
-    userLogin: profileInfo3.login,
-    userId: profileInfo3.userId,
-    lastMessage: message2,
-};
+];

@@ -1,5 +1,5 @@
-import { FaceDetectionResult } from 'expo-camera';
 import { useState } from 'react';
+import { FaceDetectionResult } from 'expo-camera';
 
 export const useSmilingProbability = () => {
     const [smilingProbability, setSmilingProbability] = useState<number>(0);
@@ -7,7 +7,6 @@ export const useSmilingProbability = () => {
         const firstFace = faceDetectionResult?.faces[0];
         setSmilingProbability(firstFace?.smilingProbability || 0);
     };
-
 
     return {
         handleFaceDetected,

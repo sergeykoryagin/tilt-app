@@ -1,20 +1,21 @@
 import React, { FC, useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Camera } from 'expo-camera';
+import { MessageItem } from 'interfaces/model/message-item';
 import { FaceDetectorMode, FaceDetectorClassifications } from 'expo-face-detector';
 import { Input } from 'components/Input';
 import { Line } from 'components/Line';
 import { Color } from 'constants/color';
 import { useAnimatedSmilingColor } from 'hooks/useAnimatedSmilingColor';
 import { useSmilingProbability } from 'hooks/useSmilingProbability';
-import { message1, message2 } from 'interfaces/model/message-item';
 import { MainStackParamList, ScreenName } from 'navigation/navigation';
 import { ChatHeader } from 'screens/Chat/components/ChatHeader';
 import { Message } from 'screens/Chat/components/Message';
 import { SmileStatus } from 'screens/Chat/components/SmileStatus';
 import { MoodStatus } from 'screens/Chat/utils/mood-status';
 import SendIcon from 'svg-icons/send-message.svg';
+import messages from 'utils/mocks/messages.json';
 
 type Props = NativeStackScreenProps<MainStackParamList, ScreenName.CHAT>;
 
@@ -52,15 +53,17 @@ export const Chat: FC<Props> = ({ navigation, route }: Props): JSX.Element => {
                 style={styles.status}
             />
             <Line />
-            <View style={styles.messageContainer}>
-                <Message
-                    message={message1}
-                />
-                <Message
-                    message={message2}
-                    style={styles.message}
-                />
-            </View>
+            <FlatList<MessageItem>
+                contentContainerStyle={styles.messageContainer}
+                style={styles.messages}
+                numColumns={1}
+                keyExtractor={(item) => item.messageId}
+                data={messages}
+                renderItem={({ item }) => (
+                    <Message message={item} style={styles.message}/>
+                )}
+                inverted={true}
+            />
             <Line />
             <Input
                 style={styles.input}
@@ -76,6 +79,7 @@ export const Chat: FC<Props> = ({ navigation, route }: Props): JSX.Element => {
 const styles = StyleSheet.create({
     screen: {
         height: '100%',
+        width: '100%',
         alignItems: 'center',
         paddingTop: 44,
         backgroundColor: Color.WHITE,
@@ -90,13 +94,12 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         width: '100%',
     },
-    messageContainer: {
-        flexGrow: 1,
-        justifyContent: 'flex-end',
-        alignItems: 'flex-start',
+    messages: {
         width: '100%',
-        paddingHorizontal: 16,
+    },
+    messageContainer: {
         paddingVertical: 12,
+        paddingHorizontal: 12,
     },
     message: {
         marginTop: 8,

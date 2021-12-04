@@ -1,22 +1,25 @@
-import React from 'react';
+import { useAuth } from 'hooks/useAuth';
+import { useStores } from 'hooks/useStores';
+import { observer } from 'mobx-react-lite';
+import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Color } from 'constants/color';
-import {useInterFont} from 'hooks/useInterFont';
+import { useInterFont } from 'hooks/useInterFont';
 import { Routes } from 'components/Routes';
+import { stores, StoresContext } from 'context/stores-context';
 
 export default function App() {
     const [isLoaded] = useInterFont();
-
     if (!isLoaded) {
-        return <View style={{backgroundColor: 'red'}}>
-
-        </View>;
+        return <View style={{backgroundColor: 'red'}}/>;
     }
 
     return (
-        <View style={styles.container}>
-            <Routes />
-        </View>
+        <StoresContext.Provider value={stores}>
+            <View style={styles.container}>
+                <Routes />
+            </View>
+        </StoresContext.Provider>
     );
 }
 
@@ -29,3 +32,4 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
 });
+

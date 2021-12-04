@@ -8,6 +8,7 @@ import { useAnimatedSmilingColor } from 'hooks/useAnimatedSmilingColor';
 import { ChatItem } from 'interfaces/model/chat-item';
 import { MainStackParamList, ScreenName } from 'navigation/navigation';
 import { Color } from 'constants/color';
+import { formatISOstring } from 'utils/formatISOstring';
 
 interface Props {
     chat: ChatItem;
@@ -38,7 +39,7 @@ export const ChatPreview: FC<Props> = ({ chat, style }: Props): JSX.Element => {
                     <View style={styles.info}>
                         <View style={styles.top}>
                             <Text style={styles.login}>{chat.userLogin}</Text>
-                            <Text style={styles.time}>{chat.lastMessage.createdAt}</Text>
+                            <Text style={styles.time}>{formatISOstring(chat.lastMessage.createdAt)}</Text>
                         </View>
                         <View style={styles.message}>
                             <Text style={styles.messageText}>{chat.lastMessage.text}</Text>
@@ -94,6 +95,7 @@ const styles = StyleSheet.create({
     },
     time: {
         ...Fonts.time,
+        color: Color.BLACK_300,
     },
     message: {
         flexDirection: 'row',

@@ -39,10 +39,10 @@ export const Button: FC<Props> = ({
         >
             <TouchableWithoutFeedback
                 onPress={onPress}
-                disabled={disabled}
                 style={styles.touchable}
                 onPressIn={togglePressed}
                 onPressOut={togglePressed}
+                disabled={disabled}
             >
                 <View style={{
                     ...styles.button,

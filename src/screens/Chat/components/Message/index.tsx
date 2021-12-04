@@ -5,7 +5,7 @@ import { IsReadCircle } from 'components/IsReadCircle';
 import { Fonts } from 'constants/fonts';
 import { useAnimatedSmilingColor } from 'hooks/useAnimatedSmilingColor';
 import { MessageItem } from 'interfaces/model/message-item';
-import { profileInfo1 } from 'interfaces/model/profile-info';
+import { formatISOstring } from 'utils/formatISOstring';
 import { getStyleByCondition } from 'utils/get-style-by-condition';
 
 interface Props {
@@ -15,8 +15,8 @@ interface Props {
 
 export const Message: FC<Props> = ({ style, message }: Props): JSX.Element => {
     const backgroundColor = useAnimatedSmilingColor(message.isUserSmiled);
-    const isMineMessage = useMemo(() => message.createdBy === profileInfo1.userId,
-        [message.createdBy, profileInfo1.userId]
+    const isMineMessage = useMemo(() => Math.random() > 0.5,
+        [message.createdBy]
     );
 
     return (
@@ -29,8 +29,8 @@ export const Message: FC<Props> = ({ style, message }: Props): JSX.Element => {
                 ]}
             >
                 <Text style={[styles.text, getStyleByCondition(isMineMessage, styles.textMine)]}>{message.text}</Text>
-                <View style={styles.info}>
-                    <Text style={styles.time}>{message.createdAt}</Text>
+                <View style={[styles.info, getStyleByCondition(isMineMessage, styles.infoMine)]}>
+                    <Text style={styles.time}>{formatISOstring(message.createdAt)}</Text>
                     {!message.isRead && <IsReadCircle />}
                 </View>
             </Animated.View>
@@ -75,6 +75,10 @@ const styles = StyleSheet.create({
     info: {
         padding: 8,
         flexGrow: 1,
+        alignItems: 'flex-end',
+    },
+    infoMine: {
+        alignItems: 'flex-start',
     },
     time: {
         ...Fonts.time,
