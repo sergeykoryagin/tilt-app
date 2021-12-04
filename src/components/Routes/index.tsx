@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { ScreenName, AuthStack, MainStack } from 'navigation/navigation';
+import { Chat } from 'screens/Chat';
 import { Home } from 'screens/Home';
 import { Profile } from 'screens/Profile';
 import { SignIn } from 'screens/SignIn';
@@ -35,6 +36,7 @@ export const Routes: FC = (): JSX.Element => {
                 >
                     <MainStack.Screen name={ScreenName.HOME} component={Home} />
                     <MainStack.Screen name={ScreenName.PROFILE} component={Profile} />
+                    <MainStack.Screen name={ScreenName.CHAT} component={Chat} />
                 </MainStack.Navigator>
             )}
         </NavigationContainer>
