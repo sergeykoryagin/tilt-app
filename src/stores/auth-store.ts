@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserInfo } from 'interfaces/model/user-info';
 import { TokenPair } from 'interfaces/model/token-pair';
@@ -71,6 +71,9 @@ export class AuthStore {
             await signOut();
             await AsyncStorage.multiRemove(['@accessToken', '@refreshToken', '@profileInfo']);
             this.setMyProfileId(null);
+            runInAction(() => {
+                this.stores.chatsStore.chats.clear();
+            });
         } catch (error) {
             console.log(error);
         } finally {

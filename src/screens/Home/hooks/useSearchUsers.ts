@@ -1,20 +1,24 @@
 import { useStores } from 'hooks/useStores';
+import { throttle } from 'lodash';
 import { useCallback, useEffect } from 'react';
-import debounce from 'lodash/debounce';
 
 export const useSearchUsers = (isUserSegmentOpened: boolean) => {
-    const { searchStore: { searchTerm, setSearchTerm, searchUsers, loadMoreUsers, users } } = useStores();
+    const { searchStore: { searchTerm, setSearchTerm, searchUsers, loadMoreUsers, users, isLoading } } = useStores();
 
-    const debouncedSearchUsers = useCallback( debounce(() => searchUsers(), 500), []);
+    const throttledSearchUsers = useCallback( throttle(() => {
+        searchUsers();
+    }, 300, { leading: true }), []);
 
     useEffect(() => {
-        isUserSegmentOpened && debouncedSearchUsers();
+        isUserSegmentOpened && throttledSearchUsers();
     }, [searchTerm, isUserSegmentOpened]);
+
 
     return {
         searchTerm,
         setSearchTerm,
         users,
         loadMoreUsers,
+        isLoading,
     };
 };

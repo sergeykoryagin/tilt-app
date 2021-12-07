@@ -1,5 +1,5 @@
 import { ChatItem } from 'interfaces/model/chat-item';
-import { makeAutoObservable, runInAction, when } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 import { MessageItem } from 'interfaces/model/message-item';
 import { Stores } from 'stores/stores';
 import parseISO from 'date-fns/parseISO';
@@ -10,9 +10,6 @@ export class ChatsStore {
 
     constructor(private stores: Stores) {
         makeAutoObservable(this);
-        when(() => !this.stores.authStore.isAuth, () => {
-            this.chats.clear();
-        });
     }
 
     get orderedChats (){

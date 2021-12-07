@@ -1,5 +1,6 @@
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { DefaultAvatar } from 'components/DefaultAvatar';
+import { Base64ImagePrefix } from 'constants/base64-image-prefix';
 import { useStores } from 'hooks/useStores';
 import React, { FC, useEffect, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
@@ -44,7 +45,7 @@ export const HomeHeader: FC = (): JSX.Element => {
                         </View>
                         {profile.avatar ? (
                             <Image
-                                source={{uri: profile.avatar}}
+                                source={{uri: `${Base64ImagePrefix}${profile.avatar}`}}
                                 style={styles.avatar}
                             />
                         ) : (

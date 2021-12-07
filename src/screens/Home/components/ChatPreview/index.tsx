@@ -1,3 +1,4 @@
+import { Base64ImagePrefix } from 'constants/base64-image-prefix';
 import { ChatPreviewItem } from 'interfaces/ChatPreviewItem';
 import { UserInfo } from 'interfaces/model/user-info';
 import React, { FC, useEffect, useState } from 'react';
@@ -42,7 +43,7 @@ export const ChatPreview: FC<Props> = ({ chat, style }: Props): JSX.Element => {
                         <View>
                             {userInfo?.avatar ? (
                                 <Image
-                                    source={{uri: userInfo.avatar}}
+                                    source={{uri: `${Base64ImagePrefix}${userInfo.avatar}`}}
                                     style={styles.avatar}
                                 />
                             ) : (

@@ -1,5 +1,5 @@
 import { useStores } from 'hooks/useStores';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 export const useProfileInfo = (userId?: string) => {
     const { profileStore: {
@@ -16,11 +16,16 @@ export const useProfileInfo = (userId?: string) => {
         userId && getUserInfo(userId);
     }, [userId]);
 
+    const handleRefreshProfile = useCallback(() => {
+        userId && getUserInfo(userId);
+    }, [userId]);
+
     return {
         profile: userInfo,
         isLoading,
         isMyProfile,
         isOnline,
-        smileStatus
+        smileStatus,
+        handleRefreshProfile
     };
 };

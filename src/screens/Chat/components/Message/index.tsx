@@ -1,4 +1,5 @@
 import { Color } from 'constants/color';
+import { observer } from 'mobx-react-lite';
 import React, { FC } from 'react';
 import { StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { IsReadCircle } from 'components/IsReadCircle';
@@ -13,7 +14,7 @@ interface Props {
     style?: ViewStyle;
 }
 
-export const Message: FC<Props> = ({ style, message }: Props): JSX.Element => {
+export const Message: FC<Props> = observer(({ style, message }: Props): JSX.Element => {
     const { isMineMessage } = useMessage(message);
     return (
         <View
@@ -31,7 +32,7 @@ export const Message: FC<Props> = ({ style, message }: Props): JSX.Element => {
             </View>
         </View>
     );
-};
+});
 
 const styles = StyleSheet.create({
     message: {
