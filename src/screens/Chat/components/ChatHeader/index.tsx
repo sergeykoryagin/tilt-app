@@ -1,4 +1,5 @@
 import { DefaultAvatar } from 'components/DefaultAvatar';
+import { Base64ImagePrefix } from 'constants/base64-image-prefix';
 import { observer } from 'mobx-react-lite';
 import React, { FC } from 'react';
 import { View, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
@@ -39,7 +40,7 @@ export const ChatHeader: FC<Props> = observer(({ onBackButtonPress, userId }: Pr
                         </View>
                         {profile?.avatar ? (
                             <Image
-                                source={{ uri: profile.avatar }}
+                                source={{ uri: `${Base64ImagePrefix}${profile.avatar}` }}
                                 style={styles.avatar}
                             />
                         ) : (

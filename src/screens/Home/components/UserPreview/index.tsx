@@ -1,4 +1,5 @@
 import { DefaultAvatar } from 'components/DefaultAvatar';
+import { Base64ImagePrefix } from 'constants/base64-image-prefix';
 import { useStores } from 'hooks/useStores';
 import { UserInfo } from 'interfaces/model/user-info';
 import { observer } from 'mobx-react-lite';
@@ -41,7 +42,7 @@ export const UserPreview: FC<Props> = observer(({ user, style }: Props): JSX.Ele
                     </View>
                     {user.avatar ? (
                         <Image
-                            source={{uri: user.avatar}}
+                            source={{uri: `${Base64ImagePrefix}${user.avatar}`}}
                             style={styles.avatar}
                         />
                     ) : (

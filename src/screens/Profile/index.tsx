@@ -1,7 +1,17 @@
 import { DefaultAvatar } from 'components/DefaultAvatar';
+import { Base64ImagePrefix } from 'constants/base64-image-prefix';
 import { observer } from 'mobx-react-lite';
 import React, { FC } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import {
+    Image,
+    RefreshControl,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    useWindowDimensions,
+    View
+} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button } from 'components/Button';
 import { Color } from 'constants/color';
@@ -20,14 +30,22 @@ export const Profile: FC<Props> = observer(({ navigation, route }: Props): JSX.E
         navigation.goBack();
     };
 
-    const { profile, isMyProfile, isOnline } = useProfileInfo(route.params.userId);
+    const { profile, isMyProfile, isOnline, isLoading, handleRefreshProfile } = useProfileInfo(route.params.userId);
 
     const handleSendMessagePress = () => {
         navigation.navigate(ScreenName.CHAT, { userId: route.params.userId });
     };
 
     return (
-        <View style={styles.screen}>
+        <ScrollView
+            contentContainerStyle={styles.screen}
+            refreshControl={
+                <RefreshControl
+                    refreshing={isLoading}
+                    onRefresh={handleRefreshProfile}
+                />
+            }
+        >
             <View style={styles.header}>
                 <TouchableOpacity
                     onPress={handleBackButtonPress}
@@ -53,7 +71,7 @@ export const Profile: FC<Props> = observer(({ navigation, route }: Props): JSX.E
             />
             {profile?.avatar ? (
                 <Image
-                    source={{uri: profile?.avatar}}
+                    source={{uri: `${Base64ImagePrefix}${profile?.avatar}`}}
                     style={{
                         ...styles.avatar,
                         height: width,
@@ -78,7 +96,7 @@ export const Profile: FC<Props> = observer(({ navigation, route }: Props): JSX.E
                     Написать сообщение
                 </Button>
             )}
-        </View>
+        </ScrollView>
     );
 });
 

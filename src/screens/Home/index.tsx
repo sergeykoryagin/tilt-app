@@ -1,7 +1,8 @@
+import { Fonts } from 'constants/fonts';
 import { useStores } from 'hooks/useStores';
 import { ChatPreviewItem } from 'interfaces/ChatPreviewItem';
 import React, { FC, useState, } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View, Text, ActivityIndicator } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Input } from 'components/Input';
 import { Line } from 'components/Line';
@@ -29,7 +30,7 @@ export const Home: FC<Props> = observer((): JSX.Element => {
         searchTerm,
         setSearchTerm,
         users,
-        loadMoreUsers
+        loadMoreUsers,
     } = useSearchUsers(segment === HomePageSegment.USERS);
 
     const {
@@ -54,25 +55,43 @@ export const Home: FC<Props> = observer((): JSX.Element => {
                 style={styles.segments}
             />
             {segment === HomePageSegment.CHATS && (
-                <FlatList<ChatPreviewItem>
-                    data={orderedChats}
-                    keyExtractor={(chat) => chat.userId}
-                    style={styles.list}
-                    numColumns={1}
-                    contentContainerStyle={styles.listContainer}
-                    renderItem={({item}) => <ChatPreview chat={item} style={styles.listItem}/>}
-                />
+                <>
+                    {orderedChats.length === 0 && (
+                        <Text style={styles.hint}>
+                            Список чатов пуст...
+                        </Text>
+                    )}
+                    <FlatList<ChatPreviewItem>
+                        data={orderedChats}
+                        keyExtractor={(chat) => chat.userId}
+                        style={styles.list}
+                        numColumns={1}
+                        contentContainerStyle={styles.listContainer}
+                        renderItem={({item}) => <ChatPreview chat={item} style={styles.listItem}/>}
+                    />
+                </>
             )}
             {segment === HomePageSegment.USERS && (
-                <FlatList<UserInfo>
-                    contentContainerStyle={styles.listContainer}
-                    data={users}
-                    style={styles.list}
-                    keyExtractor={(user: UserInfo) => user.id}
-                    numColumns={1}
-                    renderItem={({item}) => <UserPreview user={item} style={styles.listItem} />}
-                    onEndReached={loadMoreUsers}
-                />
+                <>
+                    {users.length === 0 && (
+                        <Text style={styles.hint}>
+                            {
+                                searchTerm.length === 0
+                                    ? 'Введите имя пользователя в поле поиска...'
+                                    : 'Список пользователей пуст...'
+                            }
+                        </Text>
+                    )}
+                    <FlatList<UserInfo>
+                        contentContainerStyle={styles.listContainer}
+                        data={users}
+                        style={styles.list}
+                        keyExtractor={(user: UserInfo) => user.id}
+                        numColumns={1}
+                        renderItem={({item}) => <UserPreview user={item} style={styles.listItem} />}
+                        onEndReached={loadMoreUsers}
+                    />
+                </>
             )}
         </View>
     );
@@ -105,5 +124,9 @@ const styles = StyleSheet.create({
     },
     listContainer: {
         alignItems: 'center'
+    },
+    hint: {
+        marginTop: 32,
+        ...Fonts.label,
     }
 });
