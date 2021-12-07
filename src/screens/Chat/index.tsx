@@ -29,7 +29,6 @@ export const Chat: FC<Props> = observer(({ navigation, route }: Props): JSX.Elem
         handleMessageTextChange
     } = useChatMessages(route.params.userId);
 
-
     const handleBackButtonPress = (): void => {
         navigation.goBack();
     };
