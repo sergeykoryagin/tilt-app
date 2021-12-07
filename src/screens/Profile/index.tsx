@@ -1,3 +1,4 @@
+import { DefaultAvatar } from 'components/DefaultAvatar';
 import { observer } from 'mobx-react-lite';
 import React, { FC } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
@@ -8,6 +9,7 @@ import { Fonts } from 'constants/fonts';
 import { MainStackParamList, ScreenName } from 'navigation/navigation';
 import { useProfileInfo } from 'screens/Profile/hooks/useProfileInfo';
 import ArrowLeftIcon from 'svg-icons/arrow-left.svg';
+import { formatISOstring } from 'utils/formatISOstring';
 
 type Props = NativeStackScreenProps<MainStackParamList, ScreenName.PROFILE>;
 
@@ -18,7 +20,11 @@ export const Profile: FC<Props> = observer(({ navigation, route }: Props): JSX.E
         navigation.goBack();
     };
 
-    const { profile, isMyProfile, isLoading } = useProfileInfo(route.params.userId);
+    const { profile, isMyProfile, isOnline } = useProfileInfo(route.params.userId);
+
+    const handleSendMessagePress = () => {
+        navigation.navigate(ScreenName.CHAT, { userId: route.params.userId });
+    };
 
     return (
         <View style={styles.screen}>
@@ -31,7 +37,9 @@ export const Profile: FC<Props> = observer(({ navigation, route }: Props): JSX.E
                 </TouchableOpacity>
                 {!isMyProfile && (
                     <Text style={styles.onlineStatus}>
-                        был в сети в 21:21
+                        {isOnline
+                            ? 'В сети'
+                            : `был(а) в сети ${profile?.wasOnline && formatISOstring(profile.wasOnline)}`}
                     </Text>
                 )}
             </View>
@@ -43,26 +51,30 @@ export const Profile: FC<Props> = observer(({ navigation, route }: Props): JSX.E
                     width,
                 }}
             />
-            <Image
-                source={{ uri: profile?.avatar }}
-                style={{
-                    ...styles.avatar,
-                    height: width,
-                    width,
-                }}
-            />
+            {profile?.avatar ? (
+                <Image
+                    source={{uri: profile?.avatar}}
+                    style={{
+                        ...styles.avatar,
+                        height: width,
+                        width,
+                    }}
+                />
+            ) : (
+                <DefaultAvatar width={width} height={width} />
+            )}
             <View style={styles.info}>
                 <Text style={styles.field}>Имя пользователя</Text>
                 <Text style={styles.login}>{profile?.login}</Text>
                 <Text style={styles.field}>Обо мне:</Text>
                 <Text style={styles.aboutMe}>{profile?.aboutMe}</Text>
             </View>
-            {profile?.login === '64c0a249-2932-4daf-b90a-46a029240b44' ? (
+            {isMyProfile ? (
                 <Button>
                     Редактировать профиль
                 </Button>
             ) : (
-                <Button>
+                <Button onPress={handleSendMessagePress}>
                     Написать сообщение
                 </Button>
             )}

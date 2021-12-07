@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ProfileInfo } from 'interfaces/model/profile-info';
+import { UserInfo } from 'interfaces/model/user-info';
 import { TokenPair } from 'interfaces/model/token-pair';
 import { authMe, signIn, signOut, signUp } from 'services/api/auth.api';
 import { Stores } from 'stores/stores';
@@ -28,8 +28,8 @@ export class AuthStore {
     signIn = async (login: string, password: string): Promise<void> => {
         this.setIsLoading(true);
         try {
-            const { tokenPair, profileInfo } = await signIn(login, password);
-            await this.setAuthData(tokenPair, profileInfo);
+            const { data: { tokenPair, userInfo } } = await signIn(login, password);
+            await this.setAuthData(tokenPair, userInfo);
         } catch (error) {
             console.log(error);
         } finally {
@@ -40,8 +40,8 @@ export class AuthStore {
     signUp = async (login: string, password: string): Promise<void> => {
         this.setIsLoading(true);
         try {
-            const { tokenPair, profileInfo } = await signUp(login, password);
-            await this.setAuthData(tokenPair, profileInfo);
+            const { data: { tokenPair, userInfo } } = await signUp(login, password);
+            await this.setAuthData(tokenPair, userInfo);
         } catch (error) {
             console.log(error);
         } finally {
@@ -52,8 +52,12 @@ export class AuthStore {
     authMe = async (): Promise<void> => {
         this.setIsLoading(true);
         try {
-            const { tokenPair, profileInfo } = await authMe();
-            await this.setAuthData(tokenPair, profileInfo);
+            const refreshToken = await AsyncStorage.getItem('@refreshToken');
+            if (!refreshToken) {
+                return;
+            }
+            const { data: { tokenPair, userInfo } } = await authMe(refreshToken);
+            await this.setAuthData(tokenPair, userInfo);
         } catch (error) {
             console.log(error);
         } finally {
@@ -74,12 +78,12 @@ export class AuthStore {
         }
     };
 
-    private setAuthData = async (tokenPair: TokenPair, profileInfo: ProfileInfo): Promise<void> => {
+    setAuthData = async (tokenPair: TokenPair, profileInfo: UserInfo): Promise<void> => {
         await AsyncStorage.multiSet([
             ['@accessToken', tokenPair.accessToken],
             ['@refreshToken', tokenPair.refreshToken],
             ['@profileInfo', JSON.stringify(profileInfo)],
         ]);
-        this.setMyProfileId(profileInfo.userId);
+        this.setMyProfileId(profileInfo.id);
     };
 }

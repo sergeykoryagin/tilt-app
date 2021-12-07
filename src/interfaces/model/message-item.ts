@@ -1,8 +1,8 @@
 export interface MessageItem {
-    messageId: string;
+    id: string;
     text: string;
     isRead: boolean;
     createdAt: string;
-    createdBy: string;
-    isUserSmiled: boolean;
+    userId: string;
+    isSmiling: boolean;
 }

@@ -23,9 +23,9 @@ export const SignIn: FC<Props> = observer((): JSX.Element => {
     };
 
     return (
-        <KeyboardAvoidingView style={{
+        <View style={{
             ...styles.screen,
-        }} behavior='height'>
+        }}>
             <Text style={styles.title}>Вход</Text>
             <Input
                 value={login}
@@ -56,7 +56,7 @@ export const SignIn: FC<Props> = observer((): JSX.Element => {
                     зарегистрироваться
                 </Link>
             </View>
-        </KeyboardAvoidingView>
+        </View>
     );
 });
 

@@ -1,29 +1,20 @@
+import { SmileStatusEnum } from 'interfaces/model/smile-status-enum';
 import PokerFaceIcon from 'svg-icons/poker-face.svg';
 import SmileIcon from 'svg-icons/smile.svg';
 import IncognitoIcon from 'svg-icons/incognito.svg';
-import UnknownIcon from 'svg-icons/unknown.svg';
-
-export enum MoodStatus {
-    POKER_FACE = 'POKER_FACE',
-    SMILE = 'SMILE',
-    INCOGNITO = 'INCOGNITO',
-    UNKNOWN = 'UNKNOWN',
-}
 
 const moodStatuses = {
-    [MoodStatus.POKER_FACE]: 'Собеседник скорее всего не улыбается',
-    [MoodStatus.SMILE]: 'Собеседник вероятно улыбается',
-    [MoodStatus.INCOGNITO]: 'Неизвестно о настроении собеседника',
-    [MoodStatus.UNKNOWN]: 'Собеседник не хочет делиться настроением',
+    [SmileStatusEnum.POKER_FACE]: 'Собеседник скорее всего не улыбается',
+    [SmileStatusEnum.SMILE]: 'Собеседник вероятно улыбается',
+    [SmileStatusEnum.INCOGNITO]: 'Неизвестно о настроении собеседника',
 };
 
 const moodIcons = {
-    [MoodStatus.POKER_FACE]: PokerFaceIcon,
-    [MoodStatus.SMILE]: SmileIcon,
-    [MoodStatus.INCOGNITO]: IncognitoIcon,
-    [MoodStatus.UNKNOWN]: UnknownIcon,
+    [SmileStatusEnum.POKER_FACE]: PokerFaceIcon,
+    [SmileStatusEnum.SMILE]: SmileIcon,
+    [SmileStatusEnum.INCOGNITO]: IncognitoIcon,
 };
 
-export const formatMoodStatus = (moodStatus: MoodStatus): string => moodStatuses[moodStatus];
+export const formatMoodStatus = (moodStatus: SmileStatusEnum): string => moodStatuses[moodStatus];
 
-export const getMoodStatusIcon = (moodStatus: MoodStatus) => moodIcons[moodStatus];
+export const getMoodStatusIcon = (moodStatus: SmileStatusEnum) => moodIcons[moodStatus];
