@@ -1,24 +1,40 @@
-import { chatItems } from 'interfaces/model/chat-item';
+import { useStores } from 'hooks/useStores';
+import { ChatPreviewItem } from 'interfaces/ChatPreviewItem';
 import React, { FC, useState, } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Input } from 'components/Input';
 import { Line } from 'components/Line';
 import { SegmentedControl } from 'components/SegmentedControl';
 import { Color } from 'constants/color';
+import { UserInfo } from 'interfaces/model/user-info';
+import { observer } from 'mobx-react-lite';
 import { MainStackParamList, ScreenName } from 'navigation/navigation';
 import { ChatPreview } from 'screens/Home/components/ChatPreview';
 import { HomeHeader } from 'screens/Home/components/HomeHeader';
+import { UserPreview } from 'screens/Home/components/UserPreview';
+import { useSearchUsers } from 'screens/Home/hooks/useSearchUsers';
 import { HomePageSegment, homePageSegments } from 'screens/Home/utils/home-page-segments';
 import SearchIcon from 'svg-icons/search.svg';
 
 type Props = NativeStackScreenProps<MainStackParamList, ScreenName.HOME>;
 
-export const Home: FC<Props> = (): JSX.Element => {
+export const Home: FC<Props> = observer((): JSX.Element => {
     const [segment, setSegment] = useState<HomePageSegment>(HomePageSegment.CHATS);
     const handleSegmentChange = (segment: HomePageSegment): void => {
         setSegment(segment);
     };
+
+    const {
+        searchTerm,
+        setSearchTerm,
+        users,
+        loadMoreUsers
+    } = useSearchUsers(segment === HomePageSegment.USERS);
+
+    const {
+        chatsStore: { orderedChats }
+    } = useStores();
 
     return (
         <View style={styles.screen}>
@@ -28,6 +44,8 @@ export const Home: FC<Props> = (): JSX.Element => {
                 placeholder='Введите имя пользователя...'
                 style={styles.input}
                 suffix={<SearchIcon width={24} height={24} fill={Color.BLACK_200} />}
+                value={searchTerm}
+                onChangeText={setSearchTerm}
             />
             <SegmentedControl
                 segments={homePageSegments}
@@ -35,17 +53,30 @@ export const Home: FC<Props> = (): JSX.Element => {
                 onChange={handleSegmentChange}
                 style={styles.segments}
             />
-            <FlatList
-                data={chatItems}
-                keyExtractor={(chat) => chat.chatId}
-                style={styles.chats}
-                numColumns={1}
-                contentContainerStyle={styles.chatsContainer}
-                renderItem={({ item }) => <ChatPreview chat={item} style={styles.chatItem} />}
-            />
+            {segment === HomePageSegment.CHATS && (
+                <FlatList<ChatPreviewItem>
+                    data={orderedChats}
+                    keyExtractor={(chat) => chat.userId}
+                    style={styles.list}
+                    numColumns={1}
+                    contentContainerStyle={styles.listContainer}
+                    renderItem={({item}) => <ChatPreview chat={item} style={styles.listItem}/>}
+                />
+            )}
+            {segment === HomePageSegment.USERS && (
+                <FlatList<UserInfo>
+                    contentContainerStyle={styles.listContainer}
+                    data={users}
+                    style={styles.list}
+                    keyExtractor={(user: UserInfo) => user.id}
+                    numColumns={1}
+                    renderItem={({item}) => <UserPreview user={item} style={styles.listItem} />}
+                    onEndReached={loadMoreUsers}
+                />
+            )}
         </View>
     );
-};
+});
 
 const styles = StyleSheet.create({
     screen: {
@@ -66,13 +97,13 @@ const styles = StyleSheet.create({
     segments: {
         marginVertical: 16,
     },
-    chatItem: {
+    listItem: {
         marginBottom: 8,
     },
-    chats: {
+    list: {
         width: '100%',
     },
-    chatsContainer: {
+    listContainer: {
         alignItems: 'center'
     }
 });

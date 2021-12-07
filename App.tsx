@@ -1,12 +1,11 @@
-import { useAuth } from 'hooks/useAuth';
-import { useStores } from 'hooks/useStores';
-import { observer } from 'mobx-react-lite';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { SocketConnection } from 'components/SocketConnection';
 import { Color } from 'constants/color';
 import { useInterFont } from 'hooks/useInterFont';
 import { Routes } from 'components/Routes';
 import { stores, StoresContext } from 'context/stores-context';
+import 'services/interceptors';
 
 export default function App() {
     const [isLoaded] = useInterFont();
@@ -16,6 +15,7 @@ export default function App() {
 
     return (
         <StoresContext.Provider value={stores}>
+            <SocketConnection />
             <View style={styles.container}>
                 <Routes />
             </View>

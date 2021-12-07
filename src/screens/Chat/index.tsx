@@ -1,5 +1,7 @@
-import React, { FC, useEffect, useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { toJS } from 'mobx';
+import { observer } from 'mobx-react-lite';
+import React, { FC } from 'react';
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Camera } from 'expo-camera';
 import { MessageItem } from 'interfaces/model/message-item';
@@ -12,28 +14,29 @@ import { useSmilingProbability } from 'hooks/useSmilingProbability';
 import { MainStackParamList, ScreenName } from 'navigation/navigation';
 import { ChatHeader } from 'screens/Chat/components/ChatHeader';
 import { Message } from 'screens/Chat/components/Message';
-import { SmileStatus } from 'screens/Chat/components/SmileStatus';
-import { MoodStatus } from 'screens/Chat/utils/mood-status';
+import { useChatMessages } from 'screens/Chat/hooks/useChatMessages';
 import SendIcon from 'svg-icons/send-message.svg';
-import messages from 'utils/mocks/messages.json';
 
 type Props = NativeStackScreenProps<MainStackParamList, ScreenName.CHAT>;
 
-export const Chat: FC<Props> = ({ navigation, route }: Props): JSX.Element => {
-    const [hasPermission, setHasPermission] = useState<boolean>(false);
+export const Chat: FC<Props> = observer(({ navigation, route }: Props): JSX.Element => {
+    const { handleFaceDetected, isSmiling } = useSmilingProbability();
+    const inputBackgroundColor = useAnimatedSmilingColor(isSmiling);
+    const {
+        messages,
+        messageText,
+        handleSendMessage,
+        handleMessageTextChange
+    } = useChatMessages(route.params.userId);
+
+
     const handleBackButtonPress = (): void => {
         navigation.goBack();
     };
-    const { handleFaceDetected, smilingProbability } = useSmilingProbability();
-    const inputBackgroundColor = useAnimatedSmilingColor(smilingProbability > 0.8);
 
-    useEffect(() => {
-        (async () => {
-            const { status } = await Camera.requestCameraPermissionsAsync();
-            setHasPermission(status === 'granted');
-        })();
-    }, []);
-
+    const onMessageSend = () => {
+        handleSendMessage(isSmiling);
+    };
 
     return (
         <View style={styles.screen}>
@@ -47,18 +50,14 @@ export const Chat: FC<Props> = ({ navigation, route }: Props): JSX.Element => {
                 style={styles.camera}
                 type={Camera.Constants.Type.front}
             />
-            <ChatHeader onBackButtonPress={handleBackButtonPress} />
-            <SmileStatus
-                moodStatus={MoodStatus.SMILE}
-                style={styles.status}
-            />
+            <ChatHeader onBackButtonPress={handleBackButtonPress} userId={route.params.userId} />
             <Line />
             <FlatList<MessageItem>
                 contentContainerStyle={styles.messageContainer}
                 style={styles.messages}
                 numColumns={1}
-                keyExtractor={(item) => item.messageId}
-                data={messages}
+                keyExtractor={(item) => item.id}
+                data={toJS(messages)}
                 renderItem={({ item }) => (
                     <Message message={item} style={styles.message}/>
                 )}
@@ -69,12 +68,21 @@ export const Chat: FC<Props> = ({ navigation, route }: Props): JSX.Element => {
                 style={styles.input}
                 placeholder='Введите сообщение...'
                 multiline
-                suffix={<SendIcon width={36} height={36} fill={Color.BLACK_400} />}
+                suffix={
+                    <TouchableOpacity
+                        activeOpacity={0.6}
+                        onPress={onMessageSend}
+                    >
+                        <SendIcon width={36} height={36} fill={Color.BLACK_400} />
+                    </TouchableOpacity>
+                }
                 backgroundColor={inputBackgroundColor}
+                value={messageText}
+                onChangeText={handleMessageTextChange}
             />
         </View>
     );
-};
+});
 
 const styles = StyleSheet.create({
     screen: {
@@ -89,10 +97,6 @@ const styles = StyleSheet.create({
         width: 1,
         position: 'absolute',
         opacity: 0.01
-    },
-    status: {
-        marginBottom: 12,
-        width: '100%',
     },
     messages: {
         width: '100%',

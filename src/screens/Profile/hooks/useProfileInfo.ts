@@ -1,17 +1,26 @@
 import { useStores } from 'hooks/useStores';
 import { useEffect } from 'react';
 
-export const useProfileInfo = (userId: string) => {
-    const { profileStore: { profileInfo, getProfileInfo, isLoading, isMyProfile, setProfileInfo } } = useStores();
+export const useProfileInfo = (userId?: string) => {
+    const { profileStore: {
+        userInfo,
+        isLoading,
+        isMyProfile,
+        getUserInfo,
+        isOnline,
+        smileStatus,
+    } } = useStores();
+
 
     useEffect(() => {
-        getProfileInfo(userId);
-        return () => setProfileInfo(null);
+        userId && getUserInfo(userId);
     }, [userId]);
 
     return {
-        profile: profileInfo,
+        profile: userInfo,
         isLoading,
-        isMyProfile
+        isMyProfile,
+        isOnline,
+        smileStatus
     };
 };

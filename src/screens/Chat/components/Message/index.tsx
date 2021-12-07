@@ -1,10 +1,10 @@
-import React, { FC, useMemo } from 'react';
-import { Animated, StyleSheet, Text, View, ViewStyle } from 'react-native';
-import { DefaultShadow } from 'components/DefaultShadow';
+import { Color } from 'constants/color';
+import React, { FC } from 'react';
+import { StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { IsReadCircle } from 'components/IsReadCircle';
 import { Fonts } from 'constants/fonts';
-import { useAnimatedSmilingColor } from 'hooks/useAnimatedSmilingColor';
 import { MessageItem } from 'interfaces/model/message-item';
+import { useMessage } from 'screens/Chat/components/Message/hooks/useMessage';
 import { formatISOstring } from 'utils/formatISOstring';
 import { getStyleByCondition } from 'utils/get-style-by-condition';
 
@@ -14,34 +14,26 @@ interface Props {
 }
 
 export const Message: FC<Props> = ({ style, message }: Props): JSX.Element => {
-    const backgroundColor = useAnimatedSmilingColor(message.isUserSmiled);
-    const isMineMessage = useMemo(() => Math.random() > 0.5,
-        [message.createdBy]
-    );
-
+    const { isMineMessage } = useMessage(message);
     return (
-        <DefaultShadow containerViewStyle={[style, getStyleByCondition(isMineMessage, styles.containerMine)]}>
-            <Animated.View
-                style={[
-                    styles.message,
-                    { backgroundColor },
-                    getStyleByCondition(isMineMessage, styles.mineMessage)
-                ]}
-            >
-                <Text style={[styles.text, getStyleByCondition(isMineMessage, styles.textMine)]}>{message.text}</Text>
-                <View style={[styles.info, getStyleByCondition(isMineMessage, styles.infoMine)]}>
-                    <Text style={styles.time}>{formatISOstring(message.createdAt)}</Text>
-                    {!message.isRead && <IsReadCircle />}
-                </View>
-            </Animated.View>
-        </DefaultShadow>
+        <View
+            style={[
+                styles.message,
+                getStyleByCondition(message.isSmiling, styles.messageSmiled),
+                getStyleByCondition(isMineMessage, styles.mineMessage),
+                style,
+            ]}
+        >
+            <Text style={[styles.text, getStyleByCondition(isMineMessage, styles.textMine)]}>{message.text}</Text>
+            <View style={[styles.info, getStyleByCondition(isMineMessage, styles.infoMine)]}>
+                <Text style={styles.time}>{formatISOstring(message.createdAt)}</Text>
+                {!message.isRead && <IsReadCircle />}
+            </View>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
-    containerMine: {
-        alignSelf: 'flex-end',
-    },
     message: {
         flexDirection: 'row',
         maxWidth: '80%',
@@ -51,6 +43,10 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 5,
         borderTopRightRadius: 15,
         borderBottomRightRadius: 15,
+        backgroundColor: Color.BLACK_100
+    },
+    messageSmiled: {
+        backgroundColor: Color.GREEN_200,
     },
     mineMessage: {
         flexDirection: 'row-reverse',
@@ -58,6 +54,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 15,
         borderTopRightRadius: 5,
         borderBottomRightRadius: 30,
+        alignSelf: 'flex-end',
     },
     text: {
         ...Fonts.messageDefault,

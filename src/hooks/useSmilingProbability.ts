@@ -1,15 +1,24 @@
-import { useState } from 'react';
+import { useCameraPermissions } from 'hooks/useCameraPermissions';
+import { useMemo, useState } from 'react';
 import { FaceDetectionResult } from 'expo-camera';
 
 export const useSmilingProbability = () => {
-    const [smilingProbability, setSmilingProbability] = useState<number>(0);
+    const [isSmiling, setIsSmiling] = useState<boolean>(false);
+
+    const { hasPermissions } = useCameraPermissions();
+
+    const isIncognito = useMemo(() => {
+        return !hasPermissions;
+    }, [hasPermissions]);
+
     const handleFaceDetected = (faceDetectionResult?: FaceDetectionResult): void => {
         const firstFace = faceDetectionResult?.faces[0];
-        setSmilingProbability(firstFace?.smilingProbability || 0);
+        setIsSmiling(!!firstFace?.smilingProbability && firstFace.smilingProbability > 0.7);
     };
 
     return {
         handleFaceDetected,
-        smilingProbability,
+        isSmiling,
+        isIncognito
     };
 };

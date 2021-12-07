@@ -17,7 +17,7 @@ export const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 export type MainStackParamList = {
     [ScreenName.HOME]: undefined;
     [ScreenName.PROFILE]: { userId: string; };
-    [ScreenName.CHAT]: { chatId: string; };
+    [ScreenName.CHAT]: { userId: string };
 };
 export const MainStack = createNativeStackNavigator<MainStackParamList>();
 

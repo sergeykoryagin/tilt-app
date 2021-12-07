@@ -1,6 +1,6 @@
 import { MessageItem } from 'interfaces/model/message-item';
 
-export interface ChatItem {
+export interface ChatPreviewItem {
     userId: string;
-    messages: MessageItem[];
+    lastMessage: MessageItem;
 }

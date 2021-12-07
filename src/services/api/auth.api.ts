@@ -1,40 +1,16 @@
+import axios, { AxiosPromise } from 'axios';
 import { AuthResponse } from 'interfaces/model/auth-response';
-import { ProfileInfo } from 'interfaces/model/profile-info';
-import profiles from 'utils/mocks/profiles.json';
 
-// @ts-ignore
-const profile: ProfileInfo = profiles[0];
+export const signIn = (login: string, password: string): AxiosPromise<AuthResponse> =>
+    axios.post('/auth/sign-in', { login, password });
 
-export const signIn = async (login: string, password: string): Promise<AuthResponse> => {
-    return new Promise((resolve) => setTimeout(() => resolve({
-        tokenPair: {
-            accessToken: login,
-            refreshToken: 'kek',
-        },
-        profileInfo: profile,
-    }), 500));
-};
 
-export const signUp = async (login: string, password: string): Promise<AuthResponse> => {
-    return new Promise((resolve) => setTimeout(() => resolve({
-        tokenPair: {
-            accessToken: login,
-            refreshToken: 'kek',
-        },
-        profileInfo: profile,
-    }), 500));
-};
+export const signUp = (login: string, password: string): AxiosPromise<AuthResponse> =>
+    axios.post('/auth/sign-up', { login, password });
 
-export const authMe = async (): Promise<AuthResponse> => {
-    return new Promise((resolve) => setTimeout(() => resolve({
-        tokenPair: {
-            accessToken: 'ssoenfsfo',
-            refreshToken: 'kek',
-        },
-        profileInfo: profile,
-    }), 500));
-};
 
-export const signOut = async (): Promise<void> => {
+export const authMe = (refreshToken: string): AxiosPromise<AuthResponse> =>
+    axios.post('/auth/auth-me', { refreshToken });
 
-};
+export const signOut = (): AxiosPromise<void> =>
+    axios.delete('/auth/sign-out');

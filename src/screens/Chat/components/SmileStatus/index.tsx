@@ -1,22 +1,21 @@
-import React, { FC, useMemo } from 'react';
-import { Animated, StyleSheet, Text, ViewStyle } from 'react-native';
 import { DefaultShadow } from 'components/DefaultShadow';
 import { Color } from 'constants/color';
 import { Fonts } from 'constants/fonts';
 import { useAnimatedSmilingColor } from 'hooks/useAnimatedSmilingColor';
-import { formatMoodStatus, getMoodStatusIcon, MoodStatus } from 'screens/Chat/utils/mood-status';
+import { SmileStatusEnum } from 'interfaces/model/smile-status-enum';
+import React, { FC, useMemo } from 'react';
+import { Animated, StyleSheet, Text, ViewStyle } from 'react-native';
+import { formatMoodStatus, getMoodStatusIcon } from 'screens/Chat/utils/mood-status';
 import { getStyleByCondition } from 'utils/get-style-by-condition';
 
 interface Props {
-    moodStatus: MoodStatus;
+    smileStatus?: SmileStatusEnum;
     style?: ViewStyle;
 }
 
-
-
-export const SmileStatus: FC<Props> = ({ moodStatus, style }: Props): JSX.Element => {
-    const MoodIcon = useMemo(() => getMoodStatusIcon(moodStatus), [moodStatus]);
-    const animatedSmilingColor = useAnimatedSmilingColor(moodStatus === MoodStatus.SMILE);
+export const SmileStatus: FC<Props> = ({ smileStatus = SmileStatusEnum.INCOGNITO, style }: Props): JSX.Element => {
+    const MoodIcon = useMemo(() => getMoodStatusIcon(smileStatus), [smileStatus]);
+    const animatedSmilingColor = useAnimatedSmilingColor(smileStatus === SmileStatusEnum.SMILE);
 
     return (
         <DefaultShadow style={style}>
@@ -24,16 +23,16 @@ export const SmileStatus: FC<Props> = ({ moodStatus, style }: Props): JSX.Elemen
                 <MoodIcon
                     width={48}
                     height={48}
-                    fill={moodStatus === MoodStatus.SMILE ? Color.GREEN_500 : Color.BLACK_400}
+                    fill={smileStatus === SmileStatusEnum.SMILE ? Color.GREEN_500 : Color.BLACK_400}
                     style={styles.icon}
                 />
                 <Text
                     style={[
                         styles.text,
-                        getStyleByCondition(moodStatus === MoodStatus.SMILE, styles.textSmile)
+                        getStyleByCondition(smileStatus === SmileStatusEnum.SMILE, styles.textSmile)
                     ]}
                 >
-                    {formatMoodStatus(moodStatus)}
+                    {formatMoodStatus(smileStatus)}
                 </Text>
             </Animated.View>
         </DefaultShadow>
