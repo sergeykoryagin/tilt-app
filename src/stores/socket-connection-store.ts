@@ -3,7 +3,7 @@ import { ChatItem } from 'interfaces/model/chat-item';
 import { MessageItem } from 'interfaces/model/message-item';
 import { OnlineUser } from 'interfaces/model/online-user';
 import { UserInfo } from 'interfaces/model/user-info';
-import { autorun, makeAutoObservable } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import { io, Socket } from 'socket.io-client';
 import { Stores } from 'stores/stores';
 
@@ -50,12 +50,15 @@ export class SocketConnectionStore {
     };
 
     sendMessage = (message: string, userId: string, isSmiling: boolean): void => {
-        console.log(message, userId, isSmiling);
         this.socket?.emit('message', { text: message, isSmiling: isSmiling, toUserId: userId });
     };
 
     getChats = (): void => {
         this.socket?.emit('chats');
+    };
+
+    sendSmile = (isSmiling: boolean): void => {
+        this.socket?.emit('smile', isSmiling);
     };
 
     private sendUserInfo = async (): Promise<void> => {

@@ -1,4 +1,5 @@
 import { DefaultAvatar } from 'components/DefaultAvatar';
+import { observer } from 'mobx-react-lite';
 import React, { FC } from 'react';
 import { View, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
 import { Link } from '@react-navigation/native';
@@ -14,7 +15,7 @@ interface Props {
     userId?: string;
 }
 
-export const ChatHeader: FC<Props> = ({ onBackButtonPress, userId }: Props): JSX.Element => {
+export const ChatHeader: FC<Props> = observer(({ onBackButtonPress, userId }: Props): JSX.Element => {
     const { profile, smileStatus } = useProfileInfo(userId);
     return (
         <>
@@ -53,7 +54,7 @@ export const ChatHeader: FC<Props> = ({ onBackButtonPress, userId }: Props): JSX
             />
         </>
     );
-};
+});
 
 const styles = StyleSheet.create({
     header: {

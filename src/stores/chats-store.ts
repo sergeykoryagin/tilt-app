@@ -1,5 +1,5 @@
 import { ChatItem } from 'interfaces/model/chat-item';
-import { makeAutoObservable, runInAction, toJS, when } from 'mobx';
+import { makeAutoObservable, runInAction, when } from 'mobx';
 import { MessageItem } from 'interfaces/model/message-item';
 import { Stores } from 'stores/stores';
 import parseISO from 'date-fns/parseISO';
@@ -33,7 +33,7 @@ export class ChatsStore {
             if (!chat1?.lastMessage || !chat2?.lastMessage) {
                 return 0;
             }
-            return parseISO(chat1.lastMessage.createdAt).getTime() - parseISO(chat2.lastMessage.createdAt).getTime();
+            return parseISO(chat2.lastMessage.createdAt).getTime() - parseISO(chat1.lastMessage.createdAt).getTime();
         });
     }
 
