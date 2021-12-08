@@ -8,6 +8,7 @@ import { Stores } from 'stores/stores';
 export class AuthStore {
     isLoading = false;
     myProfileId: string | null = null;
+    myProfile: UserInfo | null = null;
 
     constructor(private stores: Stores) {
         makeAutoObservable(this);
@@ -23,6 +24,10 @@ export class AuthStore {
 
     setMyProfileId = (myProfileId: string | null): void => {
         this.myProfileId = myProfileId;
+    };
+
+    setMyProfile = (myProfile: UserInfo | null): void => {
+        this.myProfile = myProfile;
     };
 
     signIn = async (login: string, password: string): Promise<void> => {
@@ -88,5 +93,16 @@ export class AuthStore {
             ['@profileInfo', JSON.stringify(profileInfo)],
         ]);
         this.setMyProfileId(profileInfo.id);
+        this.setMyProfile(profileInfo);
     };
+
+    setProfileInfo = async (profileInfo: UserInfo | null): Promise<void> => {
+        if (!profileInfo) {
+            return;
+        }
+        await AsyncStorage.setItem('@profileInfo', JSON.stringify(profileInfo));
+        this.setMyProfileId(profileInfo.id);
+        this.setMyProfile(profileInfo);
+    };
+
 }

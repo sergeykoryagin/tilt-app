@@ -4,5 +4,5 @@ export interface UserInfo {
     login: string;
     wasOnline: string;
     aboutMe?: string;
-    avatar?: string;
+    avatar?: string | null;
 }

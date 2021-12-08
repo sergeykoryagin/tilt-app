@@ -1,7 +1,8 @@
+import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types';
 import { SmileStatusEnum } from 'interfaces/model/smile-status-enum';
 import { UserInfo } from 'interfaces/model/user-info';
 import { makeAutoObservable } from 'mobx';
-import { getProfileInfo } from 'services/api/main.api';
+import { deleteAvatar, getProfileInfo, updateAvatar, updateProfile } from 'services/api/main.api';
 import { Stores } from 'stores/stores';
 
 export class ProfileStore {
@@ -61,6 +62,53 @@ export class ProfileStore {
         this.setIsLoading(true);
         try {
             const { data: userInfo } = await getProfileInfo(userId);
+            this.setUserInfo(userInfo);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            this.setIsLoading(false);
+        }
+    };
+
+    updateAvatar = async (avatar: ImageInfo): Promise<void> => {
+        this.isLoading = true;
+        try {
+            const file = {
+                uri: avatar.uri,
+                type: 'image/jpeg',
+                name: 'avatar.jpeg'
+            };
+            // @ts-ignore
+            const { data: userInfo } = await updateAvatar(file);
+            await this.stores.authStore.setProfileInfo(userInfo);
+            this.setUserInfo(userInfo);
+        } catch (error) {
+            console.log('sfnoiesfnsn');
+            console.log(error);
+        } finally {
+            this.setIsLoading(false);
+        }
+    };
+
+    updateProfile = async (login: string, aboutMe?: string): Promise<void> => {
+        this.isLoading = true;
+        try {
+            const { data: userInfo } = await updateProfile(login, aboutMe);
+            await this.stores.authStore.setProfileInfo(userInfo);
+            this.setUserInfo(userInfo);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            this.setIsLoading(false);
+        }
+    };
+
+    deleteAvatar = async (): Promise<void> => {
+        this.isLoading = true;
+        try {
+            await deleteAvatar();
+            const userInfo: UserInfo | null = this.userInfo && {...this.userInfo, avatar: null};
+            await this.stores.authStore.setProfileInfo(userInfo);
             this.setUserInfo(userInfo);
         } catch (error) {
             console.log(error);
