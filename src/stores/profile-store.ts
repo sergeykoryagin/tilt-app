@@ -1,7 +1,8 @@
+import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types';
 import { SmileStatusEnum } from 'interfaces/model/smile-status-enum';
 import { UserInfo } from 'interfaces/model/user-info';
 import { makeAutoObservable } from 'mobx';
-import { getProfileInfo } from 'services/api/main.api';
+import { deleteAvatar, getProfileInfo, updateAvatar, updateProfile } from 'services/api/main.api';
 import { Stores } from 'stores/stores';
 
 export class ProfileStore {
@@ -63,6 +64,58 @@ export class ProfileStore {
             const { data: userInfo } = await getProfileInfo(userId);
             this.setUserInfo(userInfo);
         } catch (error) {
+            this.stores.errorStore.setError('Ошибка в получении информации о пользователе');
+            console.log(error);
+        } finally {
+            this.setIsLoading(false);
+        }
+    };
+
+    updateAvatar = async (avatar: ImageInfo): Promise<void> => {
+        this.isLoading = true;
+        try {
+            const file = {
+                uri: avatar.uri,
+                type: 'image/jpeg',
+                name: 'avatar.jpeg'
+            };
+            // @ts-ignore
+            const { data: userInfo } = await updateAvatar(file);
+            await this.stores.authStore.setProfileInfo(userInfo);
+            this.setUserInfo(userInfo);
+        } catch (error) {
+            this.stores.errorStore.setError('Ошибка в обновлении фотографии профиля, возможно вы отправили слишком большой файл');
+            console.log(error);
+        } finally {
+            this.setIsLoading(false);
+        }
+    };
+
+    updateProfile = async (login: string, aboutMe: string): Promise<void> => {
+        this.isLoading = true;
+        try {
+            const { data: userInfo } = await updateProfile(login, aboutMe);
+            await this.stores.authStore.setProfileInfo(userInfo);
+            this.setUserInfo(userInfo);
+        } catch (error) {
+            this.stores.errorStore.setError(
+                'Ошибка в обновлении профиля, возможно имя пользователя уже занято, или повторите попытку позже'
+            );
+            console.log(error);
+        } finally {
+            this.setIsLoading(false);
+        }
+    };
+
+    deleteAvatar = async (): Promise<void> => {
+        this.isLoading = true;
+        try {
+            await deleteAvatar();
+            const userInfo: UserInfo | null = this.userInfo && {...this.userInfo, avatar: null};
+            await this.stores.authStore.setProfileInfo(userInfo);
+            this.setUserInfo(userInfo);
+        } catch (error) {
+            this.stores.errorStore.setError('Ошибка в удалении фотографии профиля, повторите позже');
             console.log(error);
         } finally {
             this.setIsLoading(false);

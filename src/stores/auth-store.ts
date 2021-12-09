@@ -2,12 +2,13 @@ import { makeAutoObservable, runInAction } from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserInfo } from 'interfaces/model/user-info';
 import { TokenPair } from 'interfaces/model/token-pair';
-import { authMe, signIn, signOut, signUp } from 'services/api/auth.api';
+import { authMe, signIn, signOut, signUp, updatePassword } from 'services/api/auth.api';
 import { Stores } from 'stores/stores';
 
 export class AuthStore {
     isLoading = false;
     myProfileId: string | null = null;
+    myProfile: UserInfo | null = null;
 
     constructor(private stores: Stores) {
         makeAutoObservable(this);
@@ -25,12 +26,17 @@ export class AuthStore {
         this.myProfileId = myProfileId;
     };
 
+    setMyProfile = (myProfile: UserInfo | null): void => {
+        this.myProfile = myProfile;
+    };
+
     signIn = async (login: string, password: string): Promise<void> => {
         this.setIsLoading(true);
         try {
             const { data: { tokenPair, userInfo } } = await signIn(login, password);
             await this.setAuthData(tokenPair, userInfo);
         } catch (error) {
+            this.stores.errorStore.setError('Неверное имя пользователя или пароль!');
             console.log(error);
         } finally {
             this.setIsLoading(false);
@@ -43,6 +49,7 @@ export class AuthStore {
             const { data: { tokenPair, userInfo } } = await signUp(login, password);
             await this.setAuthData(tokenPair, userInfo);
         } catch (error) {
+            this.stores.errorStore.setError(`Пользователь с именем - '${login}' уже существует`);
             console.log(error);
         } finally {
             this.setIsLoading(false);
@@ -59,6 +66,7 @@ export class AuthStore {
             const { data: { tokenPair, userInfo } } = await authMe(refreshToken);
             await this.setAuthData(tokenPair, userInfo);
         } catch (error) {
+            this.stores.errorStore.setError('Ошибка авторизации!');
             console.log(error);
         } finally {
             this.setIsLoading(false);
@@ -81,6 +89,18 @@ export class AuthStore {
         }
     };
 
+    updatePassword = async (password: string): Promise<void> => {
+        this.setIsLoading(true);
+        try {
+            await updatePassword(password);
+        } catch (error) {
+            this.stores.errorStore.setError('Ошибка при обновлении пароля!');
+            console.log(error);
+        } finally {
+            this.setIsLoading(false);
+        }
+    };
+
     setAuthData = async (tokenPair: TokenPair, profileInfo: UserInfo): Promise<void> => {
         await AsyncStorage.multiSet([
             ['@accessToken', tokenPair.accessToken],
@@ -88,5 +108,16 @@ export class AuthStore {
             ['@profileInfo', JSON.stringify(profileInfo)],
         ]);
         this.setMyProfileId(profileInfo.id);
+        this.setMyProfile(profileInfo);
     };
+
+    setProfileInfo = async (profileInfo: UserInfo | null): Promise<void> => {
+        if (!profileInfo) {
+            return;
+        }
+        await AsyncStorage.setItem('@profileInfo', JSON.stringify(profileInfo));
+        this.setMyProfileId(profileInfo.id);
+        this.setMyProfile(profileInfo);
+    };
+
 }

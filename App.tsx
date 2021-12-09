@@ -1,3 +1,4 @@
+import { Error } from 'components/Error';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SocketConnection } from 'components/SocketConnection';
@@ -17,6 +18,7 @@ export default function App() {
         <StoresContext.Provider value={stores}>
             <SocketConnection />
             <View style={styles.container}>
+                <Error />
                 <Routes />
             </View>
         </StoresContext.Provider>
@@ -29,7 +31,7 @@ const styles = StyleSheet.create({
         height: '100%',
         width: '100%',
         backgroundColor: Color.WHITE,
-        justifyContent: 'center',
+        position: 'relative'
     },
 });
 

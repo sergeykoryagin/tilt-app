@@ -17,7 +17,7 @@ interface Props {
 }
 
 export const ChatHeader: FC<Props> = observer(({ onBackButtonPress, userId }: Props): JSX.Element => {
-    const { profile, smileStatus } = useProfileInfo(userId);
+    const { profile, smileStatus, getUserInfo } = useProfileInfo(userId);
     return (
         <>
             <View style={styles.header}>
@@ -32,7 +32,10 @@ export const ChatHeader: FC<Props> = observer(({ onBackButtonPress, userId }: Pr
                     />
                 </TouchableOpacity>
 
-                <Link<MainStackParamList> to={{ screen: ScreenName.PROFILE, params: { userId: profile?.id || '' } }}>
+                <Link<MainStackParamList>
+                    to={{ screen: ScreenName.PROFILE, params: { userId: profile?.id || '' } }}
+                    onPress={() => getUserInfo(profile?.id || '')}
+                >
                     <View style={styles.userInfo}>
                         <View style={styles.info}>
                             <Text style={styles.login}>{profile?.login}</Text>

@@ -1,4 +1,5 @@
 import { Base64ImagePrefix } from 'constants/base64-image-prefix';
+import { useStores } from 'hooks/useStores';
 import { ChatPreviewItem } from 'interfaces/ChatPreviewItem';
 import { UserInfo } from 'interfaces/model/user-info';
 import React, { FC, useEffect, useState } from 'react';
@@ -22,6 +23,7 @@ interface Props {
 export const ChatPreview: FC<Props> = ({ chat, style }: Props): JSX.Element => {
     const backgroundColor = useAnimatedSmilingColor(chat.lastMessage.isSmiling);
     const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+    const { authStore: { myProfileId } } = useStores();
 
     useEffect(() => {
         getProfileInfo(chat.userId).then((response) => {
@@ -57,7 +59,12 @@ export const ChatPreview: FC<Props> = ({ chat, style }: Props): JSX.Element => {
                             <Text style={styles.time}>{formatISOstring(chat.lastMessage.createdAt)}</Text>
                         </View>
                         <View style={styles.message}>
-                            <Text style={styles.messageText}>{chat.lastMessage.text}</Text>
+                            <Text style={styles.messageText} numberOfLines={2}>
+                                {chat.lastMessage.userId === myProfileId && (
+                                    <Text style={styles.messageTextBold}>Вы: </Text>
+                                )}
+                                {chat.lastMessage.text}
+                            </Text>
                             {!chat.lastMessage.isRead && <IsReadCircle style={styles.readCircle} />}
                         </View>
                     </View>
@@ -121,7 +128,9 @@ const styles = StyleSheet.create({
     messageText: {
         ...Fonts.messageSmall,
         maxWidth: 200,
-        overflow: 'hidden',
+    },
+    messageTextBold: {
+        ...Fonts.messageSmallBold,
     },
     readCircle: {
         marginTop: 8,

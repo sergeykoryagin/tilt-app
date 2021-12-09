@@ -13,7 +13,7 @@ import { Fonts } from 'constants/fonts';
 type Props = NativeStackScreenProps<AuthStackParamList, ScreenName.SIGN_IN>;
 
 export const SignIn: FC<Props> = observer((): JSX.Element => {
-    const { authStore: { isLoading, signIn } } = useStores();
+    const { authStore: { isLoading, signIn }, errorStore: { error, setError } } = useStores();
 
     const [login, setLogin] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -44,7 +44,7 @@ export const SignIn: FC<Props> = observer((): JSX.Element => {
             <Button
                 style={styles.button}
                 onPress={handleSignInPress}
-                disabled={isLoading}
+                disabled={!!error || isLoading}
             >
                  Войти
             </Button>

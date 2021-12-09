@@ -5,7 +5,9 @@ import { ScreenName, AuthStack, MainStack } from 'navigation/navigation';
 import { useAuth } from 'hooks/useAuth';
 import { Chat } from 'screens/Chat';
 import { Home } from 'screens/Home';
+import { PasswordChange } from 'screens/PasswordChange';
 import { Profile } from 'screens/Profile';
+import { Settings } from 'screens/Settings';
 import { SignIn } from 'screens/SignIn';
 import { SignUp } from 'screens/SignUp';
 
@@ -39,6 +41,8 @@ export const Routes: FC = observer((): JSX.Element => {
                     <MainStack.Screen name={ScreenName.HOME} component={Home} />
                     <MainStack.Screen name={ScreenName.PROFILE} component={Profile} />
                     <MainStack.Screen name={ScreenName.CHAT} component={Chat} />
+                    <MainStack.Screen name={ScreenName.SETTINGS} component={Settings} />
+                    <MainStack.Screen name={ScreenName.PASSWORD_CHANGE} component={PasswordChange} />
                 </MainStack.Navigator>
             )}
         </NavigationContainer>

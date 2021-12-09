@@ -11,6 +11,7 @@ interface Props {
     onPress?: () => void;
     style?: ViewStyle;
     disabled?: boolean;
+    textColor?: string;
 }
 
 export enum SHADOW_OFFSET {
@@ -23,6 +24,7 @@ export const Button: FC<Props> = ({
     onPress,
     style,
     disabled = false,
+    textColor = Color.BLACK_500
 }: Props): JSX.Element => {
     const [pressed, setPressed] = useState<boolean>(false);
     const togglePressed = useCallback(() => setPressed((prev: boolean): boolean => !prev), []);
@@ -53,6 +55,7 @@ export const Button: FC<Props> = ({
                         ...styles.text,
                         ...getStyleByCondition(disabled, styles.textDisabled),
                         ...getStyleByCondition(pressed, styles.textPressed),
+                        color: textColor,
                     }}>{children}</Text>
                 </View>
             </TouchableWithoutFeedback>

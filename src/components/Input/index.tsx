@@ -18,6 +18,7 @@ interface Props {
     keyboardType?: KeyboardType;
     blurOnSubmit?: boolean;
     backgroundColor?: string | Animated.Value | Animated.AnimatedInterpolation | OpaqueColorValue;
+    maxLength?: number;
 }
 
 enum SHADOW_OFFSET {
@@ -34,6 +35,7 @@ export const Input: FC<Props> = ({
     suffix,
     keyboardType,
     blurOnSubmit,
+    maxLength,
     secureTextEntry = false,
     editable = true,
     multiline = false,
@@ -80,6 +82,7 @@ export const Input: FC<Props> = ({
                     textAlignVertical={multiline ? 'top' : 'center'}
                     blurOnSubmit={blurOnSubmit}
                     keyboardType={keyboardType}
+                    maxLength={maxLength}
                 />
                 {suffix}
             </Animated.View>

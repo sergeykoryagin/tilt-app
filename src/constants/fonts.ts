@@ -70,6 +70,12 @@ export const Fonts = StyleSheet.create({
         lineHeight: 17,
         color: Color.BLACK_500,
     },
+    messageSmallBold: {
+        fontFamily: InterFont.Inter_600SemiBold,
+        fontSize: 14,
+        lineHeight: 17,
+        color: Color.BLACK_500,
+    },
     label: {
         fontFamily: InterFont.Inter_700Bold,
         fontSize: 14,

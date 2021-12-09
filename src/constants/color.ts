@@ -10,4 +10,6 @@ export enum Color {
     BLACK_300 = '#808080',
     BLACK_400 = '#4D4D4D',
     BLACK_500 = '#1A1A1A',
+    RED = '#872B2B',
+    RED_LIGHT = '#FFE3E3'
 }
