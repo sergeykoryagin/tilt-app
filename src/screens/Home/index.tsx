@@ -34,8 +34,6 @@ export const Home: FC<Props> = observer((): JSX.Element => {
         loadMoreUsers,
     } = useSearchUsers(segment === HomePageSegment.USERS);
 
-    usePermissionsRequest();
-
     const {
         chatsStore: { orderedChats }
     } = useStores();

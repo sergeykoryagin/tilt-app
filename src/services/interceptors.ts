@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
-const BASE_URL = 'http://192.168.0.105:4001';
+const BASE_URL = 'https://infinite-sands-52556.herokuapp.com/';
 
 axios.defaults.baseURL = BASE_URL;
 axios.defaults.headers.common['Content-Type'] = 'application/json';

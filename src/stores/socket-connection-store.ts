@@ -4,7 +4,7 @@ import { MessageItem } from 'interfaces/model/message-item';
 import { OnlineUser } from 'interfaces/model/online-user';
 import { UserInfo } from 'interfaces/model/user-info';
 import { makeAutoObservable } from 'mobx';
-import { io, Socket } from 'socket.io-client';
+import { io, Socket, connect } from 'socket.io-client';
 import { Stores } from 'stores/stores';
 
 export class SocketConnectionStore {
@@ -29,7 +29,7 @@ export class SocketConnectionStore {
 
     createNewConnection = async (): Promise<void> => {
         if (!this.socket) {
-            this.setSocket(io('http://192.168.0.105:80'));
+            this.setSocket(io('https://infinite-sands-52556.herokuapp.com'));
             await this.sendUserInfo();
             this.setupEventHandlers();
             this.getChats();
