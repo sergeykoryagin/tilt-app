@@ -1,4 +1,5 @@
 import { Fonts } from 'constants/fonts';
+import { usePermissionsRequest } from 'hooks/usePermissionsRequest';
 import { useStores } from 'hooks/useStores';
 import { ChatPreviewItem } from 'interfaces/ChatPreviewItem';
 import React, { FC, useState, } from 'react';
@@ -32,6 +33,8 @@ export const Home: FC<Props> = observer((): JSX.Element => {
         users,
         loadMoreUsers,
     } = useSearchUsers(segment === HomePageSegment.USERS);
+
+    usePermissionsRequest();
 
     const {
         chatsStore: { orderedChats }

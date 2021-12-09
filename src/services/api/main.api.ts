@@ -1,4 +1,5 @@
-import axios, { AxiosPromise } from 'axios';
+import axios, { Axios, AxiosPromise } from 'axios';
+import { DataSendPermissionsInfo } from 'interfaces/model/data-send-permissions-info';
 import { UserInfo } from 'interfaces/model/user-info';
 import { Pagination } from 'interfaces/pagination';
 
@@ -17,5 +18,13 @@ export const updateAvatar = (avatar: Blob): AxiosPromise<UserInfo> => {
 export const deleteAvatar = (): AxiosPromise<UserInfo> =>
     axios.delete('/users/avatar');
 
-export const updateProfile = (login: string, aboutMe?: string): AxiosPromise<UserInfo> =>
+export const updateProfile = (login: string, aboutMe: string): AxiosPromise<UserInfo> =>
     axios.put('/users', { login, aboutMe });
+
+export const getDataSendPermissionsInfo = (): AxiosPromise<DataSendPermissionsInfo> =>
+    axios.get('/users/permissions');
+
+export const updateDataSendPermissionsInfo = (
+    dataSendPermissionsInfo: DataSendPermissionsInfo
+): AxiosPromise<DataSendPermissionsInfo> =>
+    axios.put('/users/permissions', dataSendPermissionsInfo);

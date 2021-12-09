@@ -3,8 +3,8 @@ import { DefaultAvatar } from 'components/DefaultAvatar';
 import { Base64ImagePrefix } from 'constants/base64-image-prefix';
 import { useStores } from 'hooks/useStores';
 import { observer } from 'mobx-react-lite';
-import React, { FC, useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
+import React, { FC } from 'react';
+import { View, StyleSheet, Image, Text } from 'react-native';
 import { Link } from '@react-navigation/native';
 import { MainStackParamList, ScreenName } from 'navigation/navigation';
 import { Color } from 'constants/color';
@@ -12,20 +12,17 @@ import { Fonts } from 'constants/fonts';
 import SettingsIcon from 'svg-icons/settings.svg';
 
 export const HomeHeader: FC = observer((): JSX.Element => {
-    const { authStore: { signOut, myProfile: profile } } = useStores();
+    const { authStore: { myProfile: profile } } = useStores();
 
     return (
         <View style={styles.header}>
-            <TouchableOpacity
-                activeOpacity={0.6}
-                onPress={signOut}
-            >
+            <Link<MainStackParamList> to={{ screen: ScreenName.SETTINGS }}>
                 <SettingsIcon
                     width={36}
                     height={36}
                     fill={Color.BLACK_400}
                 />
-            </TouchableOpacity>
+            </Link>
 
             {profile && (
                 <Link<MainStackParamList> to={{screen: ScreenName.PROFILE, params: {userId: profile.id}}}>

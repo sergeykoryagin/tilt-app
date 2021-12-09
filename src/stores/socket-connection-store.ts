@@ -29,7 +29,7 @@ export class SocketConnectionStore {
 
     createNewConnection = async (): Promise<void> => {
         if (!this.socket) {
-            this.setSocket(io('http://192.168.1.38:80'));
+            this.setSocket(io('http://192.168.0.105:80'));
             await this.sendUserInfo();
             this.setupEventHandlers();
             this.getChats();

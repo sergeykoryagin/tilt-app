@@ -7,6 +7,7 @@ export enum ScreenName {
     PROFILE = 'PROFILE',
     CHAT = 'CHAT',
     SETTINGS = 'SETTINGS',
+    PASSWORD_CHANGE = 'PASSWORD_CHANGE',
 }
 
 export type AuthStackParamList = {
@@ -20,6 +21,7 @@ export type MainStackParamList = {
     [ScreenName.PROFILE]: { userId: string; };
     [ScreenName.CHAT]: { userId: string };
     [ScreenName.SETTINGS]: undefined;
+    [ScreenName.PASSWORD_CHANGE]: undefined,
 };
 export const MainStack = createNativeStackNavigator<MainStackParamList>();
 

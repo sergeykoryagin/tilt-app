@@ -21,7 +21,7 @@ export const useEditMode = () => {
 
     const handleSaveButtonPress = () => {
         if (editableLogin && editableLogin.length > 3) {
-            updateProfile(editableLogin, editableAboutMe);
+            updateProfile(editableLogin, editableAboutMe || '');
             setEditMode(false);
         }
     };

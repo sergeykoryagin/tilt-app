@@ -2,50 +2,55 @@ import React, { FC, useState } from 'react';
 import { Link } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { View, Text, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 import { Color } from 'constants/color';
 import { useStores } from 'hooks/useStores';
-import { AuthStackParamList, ScreenName } from 'navigation/navigation';
+import { AuthStackParamList, MainStackParamList, ScreenName } from 'navigation/navigation';
 import { Button } from 'components/Button';
 import { Input } from 'components/Input';
 import { Fonts } from 'constants/fonts';
+import ArrowLeftIcon from 'svg-icons/arrow-left.svg';
 
-type Props = NativeStackScreenProps<AuthStackParamList, ScreenName.SIGN_UP>;
+type Props = NativeStackScreenProps<MainStackParamList, ScreenName.PASSWORD_CHANGE>;
 
-export const SignUp: FC<Props> = observer((): JSX.Element => {
-    const [login, setLogin] = useState<string>('');
+export const PasswordChange: FC<Props> = observer(({ navigation }): JSX.Element => {
     const [password, setPassword] = useState<string>('');
     const [passwordRepeat, setPasswordRepeat] = useState<string>('');
 
-    const { authStore: { signUp, isLoading }, errorStore: { setError, error } } = useStores();
+    const { authStore: { updatePassword, isLoading }, errorStore: { setError, error } } = useStores();
 
-    const handleSignUpPress = () => {
+    const handleSignUpPress = async () => {
         if (password !== passwordRepeat) {
             setError('Пароли не совпадают!');
-            return;
-        }
-        if (login.length < 4) {
-            setError('Минимальная длина имени пользователя - 4');
             return;
         }
         if (password.length < 4) {
             setError('Минимальная длина пароля - 4 символа');
             return;
         }
-        signUp(login, password);
+        await updatePassword(password);
+        navigation.goBack();
+    };
+
+    const handleBackButtonPress = () => {
+        navigation.goBack();
     };
 
     return (
         <KeyboardAvoidingView style={styles.screen}>
-            <Text style={styles.title}>Регистрация</Text>
-            <Input
-                value={login}
-                onChangeText={setLogin}
-                placeholder='Имя пользователя'
-                style={styles.input}
-                editable={!isLoading}
-                maxLength={20}
-            />
+            <View style={styles.header}>
+                <TouchableOpacity
+                    activeOpacity={0.6}
+                    onPress={handleBackButtonPress}
+                >
+                    <ArrowLeftIcon
+                        width={48}
+                        height={48}
+                        fill={Color.BLACK_400}
+                    />
+                </TouchableOpacity>
+                <Text style={styles.title}>Обновление пароля</Text>
+            </View>
             <Input
                 value={password}
                 onChangeText={setPassword}
@@ -66,16 +71,8 @@ export const SignUp: FC<Props> = observer((): JSX.Element => {
                 onPress={handleSignUpPress}
                 disabled={!!error || isLoading}
             >
-                Зарегистрироваться
+                Сохранить
             </Button>
-            <View style={styles.linkWrapper}>
-                <Text style={styles.hasAccount}>
-                    есть аккаунт?
-                </Text>
-                <Link<AuthStackParamList> to={{ screen: ScreenName.SIGN_IN }} style={styles.link}>
-                    авторизоваться
-                </Link>
-            </View>
         </KeyboardAvoidingView>
     );
 });
@@ -85,28 +82,23 @@ const styles = StyleSheet.create({
         height: '100%',
         width: '100%',
         alignItems: 'center',
-        paddingTop: 44,
         backgroundColor: Color.WHITE,
+    },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        maxWidth: 327,
+        marginTop: 44,
+        marginBottom: 48,
     },
     title: {
         ...Fonts.header,
-        marginBottom: 24,
     },
     input: {
         marginBottom: 20,
     },
     button: {
         marginVertical: 48,
-    },
-    linkWrapper: {
-        alignItems: 'center',
-    },
-    hasAccount: {
-        ...Fonts.paragraphDefault,
-        marginBottom: 4,
-    },
-    link: {
-        ...Fonts.paragraphBold,
-        color: Color.GREEN_400,
     },
 });

@@ -64,6 +64,7 @@ export class ProfileStore {
             const { data: userInfo } = await getProfileInfo(userId);
             this.setUserInfo(userInfo);
         } catch (error) {
+            this.stores.errorStore.setError('Ошибка в получении информации о пользователе');
             console.log(error);
         } finally {
             this.setIsLoading(false);
@@ -83,20 +84,23 @@ export class ProfileStore {
             await this.stores.authStore.setProfileInfo(userInfo);
             this.setUserInfo(userInfo);
         } catch (error) {
-            console.log('sfnoiesfnsn');
+            this.stores.errorStore.setError('Ошибка в обновлении фотографии профиля, возможно вы отправили слишком большой файл');
             console.log(error);
         } finally {
             this.setIsLoading(false);
         }
     };
 
-    updateProfile = async (login: string, aboutMe?: string): Promise<void> => {
+    updateProfile = async (login: string, aboutMe: string): Promise<void> => {
         this.isLoading = true;
         try {
             const { data: userInfo } = await updateProfile(login, aboutMe);
             await this.stores.authStore.setProfileInfo(userInfo);
             this.setUserInfo(userInfo);
         } catch (error) {
+            this.stores.errorStore.setError(
+                'Ошибка в обновлении профиля, возможно имя пользователя уже занято, или повторите попытку позже'
+            );
             console.log(error);
         } finally {
             this.setIsLoading(false);
@@ -111,6 +115,7 @@ export class ProfileStore {
             await this.stores.authStore.setProfileInfo(userInfo);
             this.setUserInfo(userInfo);
         } catch (error) {
+            this.stores.errorStore.setError('Ошибка в удалении фотографии профиля, повторите позже');
             console.log(error);
         } finally {
             this.setIsLoading(false);

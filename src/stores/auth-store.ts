@@ -2,7 +2,7 @@ import { makeAutoObservable, runInAction } from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserInfo } from 'interfaces/model/user-info';
 import { TokenPair } from 'interfaces/model/token-pair';
-import { authMe, signIn, signOut, signUp } from 'services/api/auth.api';
+import { authMe, signIn, signOut, signUp, updatePassword } from 'services/api/auth.api';
 import { Stores } from 'stores/stores';
 
 export class AuthStore {
@@ -36,6 +36,7 @@ export class AuthStore {
             const { data: { tokenPair, userInfo } } = await signIn(login, password);
             await this.setAuthData(tokenPair, userInfo);
         } catch (error) {
+            this.stores.errorStore.setError('Неверное имя пользователя или пароль!');
             console.log(error);
         } finally {
             this.setIsLoading(false);
@@ -48,6 +49,7 @@ export class AuthStore {
             const { data: { tokenPair, userInfo } } = await signUp(login, password);
             await this.setAuthData(tokenPair, userInfo);
         } catch (error) {
+            this.stores.errorStore.setError(`Пользователь с именем - '${login}' уже существует`);
             console.log(error);
         } finally {
             this.setIsLoading(false);
@@ -64,6 +66,7 @@ export class AuthStore {
             const { data: { tokenPair, userInfo } } = await authMe(refreshToken);
             await this.setAuthData(tokenPair, userInfo);
         } catch (error) {
+            this.stores.errorStore.setError('Ошибка авторизации!');
             console.log(error);
         } finally {
             this.setIsLoading(false);
@@ -80,6 +83,18 @@ export class AuthStore {
                 this.stores.chatsStore.chats.clear();
             });
         } catch (error) {
+            console.log(error);
+        } finally {
+            this.setIsLoading(false);
+        }
+    };
+
+    updatePassword = async (password: string): Promise<void> => {
+        this.setIsLoading(true);
+        try {
+            await updatePassword(password);
+        } catch (error) {
+            this.stores.errorStore.setError('Ошибка при обновлении пароля!');
             console.log(error);
         } finally {
             this.setIsLoading(false);

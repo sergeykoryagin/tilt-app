@@ -1,7 +1,8 @@
+import { Fonts } from 'constants/fonts';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { FC } from 'react';
-import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Camera } from 'expo-camera';
 import { MessageItem } from 'interfaces/model/message-item';
@@ -20,8 +21,8 @@ import SendIcon from 'svg-icons/send-message.svg';
 type Props = NativeStackScreenProps<MainStackParamList, ScreenName.CHAT>;
 
 export const Chat: FC<Props> = observer(({ navigation, route }: Props): JSX.Element => {
-    const { handleFaceDetected, isSmiling } = useSmilingProbability();
-    const inputBackgroundColor = useAnimatedSmilingColor(isSmiling);
+    const { handleFaceDetected, isSmiling, isIncognito } = useSmilingProbability();
+    const inputBackgroundColor = useAnimatedSmilingColor(!isIncognito && isSmiling);
     const {
         messages,
         messageText,
@@ -39,16 +40,18 @@ export const Chat: FC<Props> = observer(({ navigation, route }: Props): JSX.Elem
 
     return (
         <View style={styles.screen}>
-            <Camera
-                onFacesDetected={handleFaceDetected}
-                faceDetectorSettings={{
-                    mode: FaceDetectorMode.fast,
-                    minDetectionInterval: 300,
-                    runClassifications: FaceDetectorClassifications.none,
-                }}
-                style={styles.camera}
-                type={Camera.Constants.Type.front}
-            />
+            {!isIncognito && (
+                <Camera
+                    onFacesDetected={handleFaceDetected}
+                    faceDetectorSettings={{
+                        mode: FaceDetectorMode.fast,
+                        minDetectionInterval: 300,
+                        runClassifications: FaceDetectorClassifications.none,
+                    }}
+                    style={styles.camera}
+                    type={Camera.Constants.Type.front}
+                />
+            )}
             <ChatHeader onBackButtonPress={handleBackButtonPress} userId={route.params.userId} />
             <Line />
             <FlatList<MessageItem>
@@ -62,6 +65,9 @@ export const Chat: FC<Props> = observer(({ navigation, route }: Props): JSX.Elem
                 )}
                 inverted={true}
             />
+            {!messages && (
+                <Text style={styles.noMessages}>У вас нет истории сообщений с этим пользователем...</Text>
+            )}
             <Line />
             <Input
                 style={styles.input}
@@ -110,5 +116,12 @@ const styles = StyleSheet.create({
     input: {
         marginTop: 12,
         marginBottom: 20,
+    },
+    noMessages: {
+        ...Fonts.label,
+        alignSelf: 'center',
+        textAlign: 'center',
+        maxWidth: 200,
+        marginBottom: 48,
     },
 });
