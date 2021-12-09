@@ -1,3 +1,4 @@
+import { usePermissionsRequest } from 'hooks/usePermissionsRequest';
 import { observer } from 'mobx-react-lite';
 import React, { FC } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
@@ -13,6 +14,7 @@ import { SignUp } from 'screens/SignUp';
 
 export const Routes: FC = observer((): JSX.Element => {
     const { isAuth } = useAuth();
+    usePermissionsRequest();
 
     return (
         <NavigationContainer>
